@@ -1,6 +1,9 @@
 package com.thoughtworks.rslist.dto;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class RsEvent {
+
 
     public RsEvent() {
     }
