@@ -8,10 +8,10 @@ import java.util.List;
 
 @RestController
 public class RsController {
-  private List<String> rsList = Arrays.asList("第一条事件", "第二条事件", "第三条事件");
+    private List<String> rsList = Arrays.asList("第一条事件", "第二条事件", "第三条事件");
 
-  @RequestMapping("/rs/list")
-  public String getList(){
-    return rsList.toString();
-  }
+    @RequestMapping("/rs/list")
+    public String getList() {
+        return rsList.toString();
+    }
 }
