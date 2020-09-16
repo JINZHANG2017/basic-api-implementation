@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.dto.RsEvent;
 import com.thoughtworks.rslist.dto.UserDto;
+import com.thoughtworks.rslist.exception.CommonError;
 import com.thoughtworks.rslist.util.JsonHelper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -93,5 +94,12 @@ public class RsController {
     @GetMapping("/user/list")
     public ResponseEntity<String> getList() throws JsonProcessingException {
         return ResponseEntity.ok(JsonHelper.getString(usersList));
+    }
+
+    @ExceptionHandler(IndexOutOfBoundsException.class)
+    public ResponseEntity<CommonError> handleException(Exception ex){
+        CommonError commonError=new CommonError();
+        commonError.setError("invalid index");
+        return ResponseEntity.badRequest().body(commonError);
     }
 }

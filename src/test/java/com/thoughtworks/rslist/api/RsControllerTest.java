@@ -287,4 +287,10 @@ class RsControllerTest {
         assertEquals("3",index);
 
     }
+
+    @Test
+    void should_return_400_when_range_not_legal() throws Exception {
+        mockMvc.perform(get("/rs/list?start=-1&end=3"))
+                .andExpect((status().isBadRequest()));
+    }
 }
