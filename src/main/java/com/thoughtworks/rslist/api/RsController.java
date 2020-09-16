@@ -71,14 +71,18 @@ public class RsController {
     }
 
     @PutMapping("/rs/event")
-    public void putOneRs(@RequestParam Integer id, @RequestBody RsEvent rsEvent) {
+    public ResponseEntity putOneRs(@RequestParam Integer id, @RequestBody RsEvent rsEvent) {
         RsEvent originRsEvent = rsList.get(id - 1);
         if (rsEvent.getEventName() != null) {
             originRsEvent.setEventName(rsEvent.getEventName());
+            ResponseEntity.status(200).build();
         }
         if (rsEvent.getKeyWord() != null) {
             originRsEvent.setKeyWord(rsEvent.getKeyWord());
+            ResponseEntity.status(200).build();
         }
+        return ResponseEntity.status(400).build();
+
     }
 
     @DeleteMapping("/rs/event")
