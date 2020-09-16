@@ -53,4 +53,12 @@ class UserControllerTest {
         mockMvc.perform(post("/user/register").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void should_return_400_when_age_more_than_100() throws Exception {
+        UserDto user=new UserDto("1234567","男",110,"abc@test.com","1334567890");
+        String json= JsonHelper.getString(user);
+        mockMvc.perform(post("/user/register").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 }
