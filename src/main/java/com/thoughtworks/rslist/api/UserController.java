@@ -3,6 +3,7 @@ package com.thoughtworks.rslist.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.util.JsonHelper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,8 +28,10 @@ public class UserController {
 //        return tempUsers;
 //    }
     @PostMapping("/user/register")
-    public void register(@Valid @RequestBody UserDto user){
+    public ResponseEntity register(@Valid @RequestBody UserDto user){
+
         users.add(user);
+        return ResponseEntity.created(null).build();
     }
 
 

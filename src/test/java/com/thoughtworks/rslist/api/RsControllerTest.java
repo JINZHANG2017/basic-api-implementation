@@ -241,7 +241,7 @@ class RsControllerTest {
         RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济",user);
         String json = JsonHelper.getString(rsEvent);
         mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
         mockMvc.perform(get("/user/list"))
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$", hasSize(4)));
