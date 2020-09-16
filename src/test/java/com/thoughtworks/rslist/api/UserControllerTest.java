@@ -37,4 +37,12 @@ class UserControllerTest {
         mockMvc.perform(post("/user/register").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void should_return_400_when_gender_is_empty() throws Exception {
+        UserDto user=new UserDto("1234567","",20,"abc@test.com","1334567890");
+        String json= JsonHelper.getString(user);
+        mockMvc.perform(post("/user/register").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 }
