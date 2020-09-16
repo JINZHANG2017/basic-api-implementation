@@ -44,17 +44,17 @@ public class RsController {
     @PutMapping("/rs/event")
     public void putOneRs(@RequestParam Integer id, @RequestBody RsEvent rsEvent) {
         RsEvent originRsEvent = rsList.get(id - 1);
-        if(rsEvent.getEventName()!=null){
+        if (rsEvent.getEventName() != null) {
             originRsEvent.setEventName(rsEvent.getEventName());
         }
-        if(rsEvent.getKeyWord()!=null){
+        if (rsEvent.getKeyWord() != null) {
             originRsEvent.setKeyWord(rsEvent.getKeyWord());
         }
     }
 
     @DeleteMapping("/rs/event")
     public void delOneRs(@RequestParam Integer id) {
-        RsEvent rsEvent=rsList.get(id-1);
+        RsEvent rsEvent = rsList.get(id - 1);
         rsList.remove(rsEvent);
     }
 }

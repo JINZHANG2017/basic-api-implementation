@@ -8,6 +8,14 @@ public class RsEvent {
     public RsEvent() {
     }
 
+    @Override
+    public String toString() {
+        return "RsEvent{" +
+                "eventName='" + eventName + '\'' +
+                ", keyWord='" + keyWord + '\'' +
+                '}';
+    }
+
     public RsEvent(String eventName, String keyWord) {
         this.eventName = eventName;
         this.keyWord = keyWord;
