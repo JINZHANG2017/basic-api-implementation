@@ -99,7 +99,7 @@ class RsControllerTest {
     }
 
     @Test
-    void should_put_a_rs() throws Exception {
+    void should_put_a_rs_eventName_is_null() throws Exception {
         mockMvc.perform(get("/rs/list"))
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$", hasSize(3)))
@@ -123,6 +123,21 @@ class RsControllerTest {
                 .andExpect(jsonPath("$[1].keyWord", is("无分类")))
                 .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
                 .andExpect(jsonPath("$[2].keyWord", is("无分类")));
+
+    }
+
+    @Test
+    void should_put_a_rs_keyWord_is_null() throws Exception {
+        mockMvc.perform(get("/rs/list"))
+                .andExpect((status().isOk()))
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("无分类")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
+                .andExpect(jsonPath("$[1].keyWord", is("无分类")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyWord", is("无分类")));
+        ObjectMapper objectMapper=new ObjectMapper();
         RsEvent rsEvent2 = new RsEvent("第二条事件2", null);
         String json2 = objectMapper.writeValueAsString(rsEvent2);
         mockMvc.perform((put("/rs/event?id=2")).content(json2).contentType(MediaType.APPLICATION_JSON))
@@ -131,12 +146,27 @@ class RsControllerTest {
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
-                .andExpect(jsonPath("$[0].keyWord", is("政治")))
+                .andExpect(jsonPath("$[0].keyWord", is("无分类")))
                 .andExpect(jsonPath("$[1].eventName", is("第二条事件2")))
                 .andExpect(jsonPath("$[1].keyWord", is("无分类")))
                 .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
                 .andExpect(jsonPath("$[2].keyWord", is("无分类")));
-        RsEvent rsEvent3 = new RsEvent("第三条事件3", "情感");
+
+    }
+
+    @Test
+    void should_put_a_rs3() throws Exception {
+        mockMvc.perform(get("/rs/list"))
+                .andExpect((status().isOk()))
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("无分类")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
+                .andExpect(jsonPath("$[1].keyWord", is("无分类")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyWord", is("无分类")));
+        ObjectMapper objectMapper=new ObjectMapper();
+        RsEvent rsEvent3=new RsEvent("第三条事件3","情感");
         String json3 = objectMapper.writeValueAsString(rsEvent3);
         mockMvc.perform((put("/rs/event?id=3")).content(json3).contentType(MediaType.APPLICATION_JSON))
                 .andExpect((status().isOk()));
@@ -144,8 +174,8 @@ class RsControllerTest {
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
-                .andExpect(jsonPath("$[0].keyWord", is("政治")))
-                .andExpect(jsonPath("$[1].eventName", is("第二条事件2")))
+                .andExpect(jsonPath("$[0].keyWord", is("无分类")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
                 .andExpect(jsonPath("$[1].keyWord", is("无分类")))
                 .andExpect(jsonPath("$[2].eventName", is("第三条事件3")))
                 .andExpect(jsonPath("$[2].keyWord", is("情感")));
