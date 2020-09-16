@@ -33,6 +33,6 @@ public class UserDto {
     private Integer age;
     @Email
     private String email;
-    @Pattern(regexp="^1[3-9]\\d{9}$")
+    @Pattern(regexp = "^1[3-9][0-9]{9}$")
     private String phone;
 }

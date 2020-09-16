@@ -2,6 +2,8 @@ package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.dto.RsEvent;
+import com.thoughtworks.rslist.dto.UserDto;
+import com.thoughtworks.rslist.util.JsonHelper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -79,7 +81,8 @@ class RsControllerTest {
                 .andExpect(jsonPath("$[1].keyWord", is("无分类")))
                 .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
                 .andExpect(jsonPath("$[2].keyWord", is("无分类")));
-        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济");
+        UserDto user=new UserDto("trump","男",20,"123@test.com","1334567890");
+        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济",user);
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(rsEvent);
         mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
@@ -202,5 +205,27 @@ class RsControllerTest {
                 .andExpect(jsonPath("$[0].keyWord", is("无分类")))
                 .andExpect(jsonPath("$[1].eventName", is("第三条事件")))
                 .andExpect(jsonPath("$[1].keyWord", is("无分类")));
+    }
+
+    @Test
+    void should_add_one_rs_event_when_user_exists() throws Exception {
+        mockMvc.perform(get("/user/list"))
+                .andExpect((status().isOk()))
+                .andExpect(jsonPath("$", hasSize(3)));
+        mockMvc.perform(get("/rs/list"))
+                .andExpect((status().isOk()))
+                .andExpect(jsonPath("$", hasSize(3)));
+        UserDto user=new UserDto("trump","男",20,"123@test.com","1334567890");
+        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济",user);
+        String json = JsonHelper.getString(rsEvent);
+        mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/user/list"))
+                .andExpect((status().isOk()))
+                .andExpect(jsonPath("$", hasSize(3)));
+        mockMvc.perform(get("/rs/list"))
+                .andExpect((status().isOk()))
+                .andExpect(jsonPath("$", hasSize(4)));
+        ;
     }
 }

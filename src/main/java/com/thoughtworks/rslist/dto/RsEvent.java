@@ -1,19 +1,18 @@
 package com.thoughtworks.rslist.dto;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 public class RsEvent {
 
 
-    public RsEvent() {
-    }
-
-    @Override
-    public String toString() {
-        return "RsEvent{" +
-                "eventName='" + eventName + '\'' +
-                ", keyWord='" + keyWord + '\'' +
-                '}';
+    public RsEvent(String eventName, String keyWord, UserDto user) {
+        this.eventName = eventName;
+        this.keyWord = keyWord;
+        this.user = user;
     }
 
     public RsEvent(String eventName, String keyWord) {
@@ -21,22 +20,7 @@ public class RsEvent {
         this.keyWord = keyWord;
     }
 
-    public String getEventName() {
-        return eventName;
-    }
-
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
-    }
-
-    public String getKeyWord() {
-        return keyWord;
-    }
-
-    public void setKeyWord(String keyWord) {
-        this.keyWord = keyWord;
-    }
-
     private String eventName;
     private String keyWord;
+    private UserDto user;
 }
