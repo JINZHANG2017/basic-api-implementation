@@ -82,9 +82,10 @@ public class RsController {
     }
 
     @DeleteMapping("/rs/event")
-    public void delOneRs(@RequestParam Integer id) {
+    public ResponseEntity delOneRs(@RequestParam Integer id) {
         RsEvent rsEvent = rsList.get(id - 1);
         rsList.remove(rsEvent);
+        return  ResponseEntity.ok().build();
     }
 
     @GetMapping("/user/list")
