@@ -86,5 +86,11 @@ class UserControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-
+    @Test
+    void should_return_200_when_all_validate() throws Exception {
+        UserDto user=new UserDto("1234567","男",20,"123@test.com","1334567890");
+        String json= JsonHelper.getString(user);
+        mockMvc.perform(post("/user/register").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 }
