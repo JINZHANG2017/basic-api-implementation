@@ -35,4 +35,16 @@ public class RsEvent {
     private String eventName;
     private String keyWord;
     private UserDto user;
+
+    //加注释之后提交也是null
+    //@Valid
+//    @JsonIgnore
+//    public UserDto getUser() {
+//        return user;
+//    }
+//
+//    @JsonProperty
+//    public void setUser(UserDto user) {
+//        this.user = user;
+//    }
 }

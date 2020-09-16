@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -219,7 +220,7 @@ class RsControllerTest {
         RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济",user);
         String json = JsonHelper.getString(rsEvent);
         mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
         mockMvc.perform(get("/user/list"))
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$", hasSize(3)));
@@ -271,5 +272,19 @@ class RsControllerTest {
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$", hasSize(3)));
         ;
+    }
+
+    @Test
+    void should_add_a_header_when_add_one_rs_event() throws Exception {
+
+        UserDto user=new UserDto("newuser","男",20,"123@test.com","1334567890");
+        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济",user);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(rsEvent);
+        MvcResult mvcResult=mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated()).andReturn();
+        String index=mvcResult.getResponse().getHeader("index");
+        assertEquals("3",index);
+
     }
 }

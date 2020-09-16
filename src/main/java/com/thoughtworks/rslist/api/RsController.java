@@ -67,7 +67,7 @@ public class RsController {
             }
         }
         rsList.add(rsEvent);
-        return ResponseEntity.created(null).build();
+        return ResponseEntity.created(null).header("index", String.valueOf(usersList.indexOf(user))).build();
     }
 
     @PutMapping("/rs/event")
@@ -75,13 +75,11 @@ public class RsController {
         RsEvent originRsEvent = rsList.get(id - 1);
         if (rsEvent.getEventName() != null) {
             originRsEvent.setEventName(rsEvent.getEventName());
-            ResponseEntity.status(200).build();
         }
         if (rsEvent.getKeyWord() != null) {
             originRsEvent.setKeyWord(rsEvent.getKeyWord());
-            ResponseEntity.status(200).build();
         }
-        return ResponseEntity.status(400).build();
+        return ResponseEntity.status(200).build();
 
     }
 
