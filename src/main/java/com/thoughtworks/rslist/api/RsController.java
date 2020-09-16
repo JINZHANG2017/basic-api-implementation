@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.dto.RsEvent;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.util.JsonHelper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,20 +46,20 @@ public class RsController {
     }
 
     @GetMapping("/rs/list")
-    public List<RsEvent> getList(@RequestParam(required = false) Integer start, @RequestParam(required = false) Integer end) {
+    public ResponseEntity<List<RsEvent>> getList(@RequestParam(required = false) Integer start, @RequestParam(required = false) Integer end) {
         if (start == null && end == null) {
-            return rsList;
+            return ResponseEntity.ok(rsList);
         }
-        return rsList.subList(start - 1, end);
+        return ResponseEntity.ok(rsList.subList(start - 1, end));
     }
 
     @GetMapping("/rs/{id}")
-    public RsEvent getOneRs(@PathVariable Integer id) {
-        return rsList.get(id - 1);
+    public ResponseEntity<RsEvent> getOneRs(@PathVariable Integer id) {
+        return ResponseEntity.ok(rsList.get(id - 1));
     }
 
     @PostMapping("/rs/event")
-    public void postOneRs(@Valid @RequestBody RsEvent rsEvent) throws JsonProcessingException {
+    public ResponseEntity postOneRs(@Valid @RequestBody RsEvent rsEvent) throws JsonProcessingException {
         UserDto user = rsEvent.getUser();
         if (user != null) {
             if (usersList.stream().filter(u -> u.getName().equals(user.getName())).count() == 0) {
@@ -66,6 +67,7 @@ public class RsController {
             }
         }
         rsList.add(rsEvent);
+        return ResponseEntity.created(null).build();
     }
 
     @PutMapping("/rs/event")
