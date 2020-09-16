@@ -77,4 +77,14 @@ class UserControllerTest {
         mockMvc.perform(post("/user/register").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void should_return_400_when_phone_not_validate() throws Exception {
+        UserDto user=new UserDto("1234567","男",20,"123@test.com","1134567890");
+        String json= JsonHelper.getString(user);
+        mockMvc.perform(post("/user/register").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
 }
