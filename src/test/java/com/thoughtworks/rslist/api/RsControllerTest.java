@@ -244,10 +244,32 @@ class RsControllerTest {
                 .andExpect(status().isOk());
         mockMvc.perform(get("/user/list"))
                 .andExpect((status().isOk()))
-                .andExpect(jsonPath("$", hasSize(3)));
+                .andExpect(jsonPath("$", hasSize(4)));
         mockMvc.perform(get("/rs/list"))
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$", hasSize(4)));
+        ;
+    }
+
+    @Test
+    void should_return_400_when_user_not_validate() throws Exception {
+        mockMvc.perform(get("/user/list"))
+                .andExpect((status().isOk()))
+                .andExpect(jsonPath("$", hasSize(3)));
+        mockMvc.perform(get("/rs/list"))
+                .andExpect((status().isOk()))
+                .andExpect(jsonPath("$", hasSize(3)));
+        UserDto user=new UserDto("newuser","男",0,"123@test.com","1334567890");
+        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济",user);
+        String json = JsonHelper.getString(rsEvent);
+        mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(get("/user/list"))
+                .andExpect((status().isOk()))
+                .andExpect(jsonPath("$", hasSize(3)));
+        mockMvc.perform(get("/rs/list"))
+                .andExpect((status().isOk()))
+                .andExpect(jsonPath("$", hasSize(3)));
         ;
     }
 }

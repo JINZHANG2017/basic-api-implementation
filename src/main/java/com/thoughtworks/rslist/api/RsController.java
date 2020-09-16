@@ -58,7 +58,7 @@ public class RsController {
     }
 
     @PostMapping("/rs/event")
-    public void postOneRs(@RequestBody @Valid RsEvent rsEvent) throws JsonProcessingException {
+    public void postOneRs(@Valid @RequestBody RsEvent rsEvent) throws JsonProcessingException {
         UserDto user = rsEvent.getUser();
         if (user != null) {
             if (usersList.stream().filter(u -> u.getName().equals(user.getName())).count() == 0) {
