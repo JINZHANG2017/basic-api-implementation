@@ -88,7 +88,7 @@ public class RsController {
     }
 
     @GetMapping("/user/list")
-    public String getList() throws JsonProcessingException {
-        return JsonHelper.getString(usersList);
+    public ResponseEntity<String> getList() throws JsonProcessingException {
+        return ResponseEntity.ok(JsonHelper.getString(usersList));
     }
 }
