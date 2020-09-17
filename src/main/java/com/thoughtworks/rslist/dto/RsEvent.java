@@ -23,15 +23,7 @@ public class RsEvent {
         this.eventName = eventName;
         this.keyWord = keyWord;
     }
-//    @JsonIgnore
-//    public UserDto getUser() {
-//        return user;
-//    }
-//
-//    @JsonProperty
-//    public void setUser(UserDto user) {
-//        this.user = user;
-//    }
+
     private String eventName;
     private String keyWord;
     private UserDto user;

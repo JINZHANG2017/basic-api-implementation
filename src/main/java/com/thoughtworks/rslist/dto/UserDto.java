@@ -1,5 +1,6 @@
 package com.thoughtworks.rslist.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -7,6 +8,7 @@ import javax.validation.constraints.*;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserDto {
 //    名称(不超过8位字符，不能为空)
 //    性别（不能为空）
@@ -14,13 +16,13 @@ public class UserDto {
 //    邮箱（符合邮箱规范）
 //    手机号（1开头的11位数字，不能为空）
 
-    public UserDto(@NotEmpty String name, @NotEmpty String gender, @NotEmpty Integer age, String email, @NotEmpty String phone) {
-        this.name = name;
-        this.gender = gender;
-        this.age = age;
-        this.email = email;
-        this.phone = phone;
-    }
+//    public UserDto(@NotEmpty String name, @NotEmpty String gender, @NotEmpty Integer age, String email, @NotEmpty String phone) {
+//        this.name = name;
+//        this.gender = gender;
+//        this.age = age;
+//        this.email = email;
+//        this.phone = phone;
+//    }
 
     @NotEmpty
     @Size(max = 8)
