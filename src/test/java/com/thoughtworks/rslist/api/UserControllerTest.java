@@ -17,8 +17,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -149,6 +148,25 @@ class UserControllerTest {
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.name", is("newuser")));
+    }
+
+    @Test
+    void should_delete_user_from_database_by_id() throws Exception {
+        UserEntity userEntity=UserEntity.builder()
+                .name("newuser")
+                .age(20)
+                .email("1@t.com")
+                .gender("男")
+                .phone("13345678900").build();
+        userRepository.save(userEntity);
+        mockMvc.perform(get("/user/{id}",userEntity.getId()))
+                .andExpect((status().isOk()))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.name", is("newuser")));
+        mockMvc.perform(delete("/user/{id}",userEntity.getId()))
+                .andExpect((status().isOk()));
+        mockMvc.perform(get("/user/{id}",userEntity.getId()))
+                .andExpect((status().isBadRequest()));
     }
 
 }
