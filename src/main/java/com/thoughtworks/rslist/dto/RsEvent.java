@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -32,8 +34,11 @@ public class RsEvent {
 //    public void setUser(UserDto user) {
 //        this.user = user;
 //    }
+    @NotEmpty
     private String eventName;
+    @NotEmpty
     private String keyWord;
+    @NotNull
     private UserDto user;
 
     //加注释之后提交也是null

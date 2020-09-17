@@ -82,7 +82,7 @@ class RsControllerTest {
                 .andExpect(jsonPath("$[1].keyWord", is("无分类")))
                 .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
                 .andExpect(jsonPath("$[2].keyWord", is("无分类")));
-        UserDto user=new UserDto("trump","男",20,"123@test.com","1334567890");
+        UserDto user=new UserDto("trump","男",20,"123@test.com","13345678900");
         RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济",user);
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(rsEvent);
@@ -216,7 +216,7 @@ class RsControllerTest {
         mockMvc.perform(get("/rs/list"))
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$", hasSize(3)));
-        UserDto user=new UserDto("trump","男",20,"123@test.com","1334567890");
+        UserDto user=new UserDto("trump","男",20,"123@test.com","13345678900");
         RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济",user);
         String json = JsonHelper.getString(rsEvent);
         mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
@@ -238,7 +238,7 @@ class RsControllerTest {
         mockMvc.perform(get("/rs/list"))
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$", hasSize(3)));
-        UserDto user=new UserDto("newuser","男",20,"123@test.com","1334567890");
+        UserDto user=new UserDto("newuser","男",20,"123@test.com","13345678900");
         RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济",user);
         String json = JsonHelper.getString(rsEvent);
         mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
@@ -260,7 +260,7 @@ class RsControllerTest {
         mockMvc.perform(get("/rs/list"))
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$", hasSize(3)));
-        UserDto user=new UserDto("newuser","男",0,"123@test.com","1334567890");
+        UserDto user=new UserDto("newuser","男",0,"123@test.com","13345678900");
         RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济",user);
         String json = JsonHelper.getString(rsEvent);
         mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
@@ -277,7 +277,7 @@ class RsControllerTest {
     @Test
     void should_add_a_header_when_add_one_rs_event() throws Exception {
 
-        UserDto user=new UserDto("newuser","男",20,"123@test.com","1334567890");
+        UserDto user=new UserDto("newuser","男",20,"123@test.com","13345678900");
         RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济",user);
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(rsEvent);

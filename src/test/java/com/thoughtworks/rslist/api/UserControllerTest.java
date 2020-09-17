@@ -1,6 +1,8 @@
 package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.dto.UserDto;
+import com.thoughtworks.rslist.entity.UserEntity;
+import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.util.JsonHelper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,5 +94,27 @@ class UserControllerTest {
         String json = JsonHelper.getString(user);
         mockMvc.perform(post("/user/register").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Autowired
+    UserRepository userRepository;
+    @Test
+    void should_get_user_from_database() throws Exception {
+        //to user = new UserDto("1234567", "男", 20, "123@test.com", "13345678900");
+        UserEntity user= UserEntity.builder()
+                .name("1234567")
+                .gender("男")
+                .age(20)
+                .email("123@test.com")
+                .phone("13345678900")
+                .build();
+        userRepository.save(user);
+        String jsonValue="";
+
+        mockMvc.perform(post("/rs/event")
+                .content(jsonValue)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
     }
 }
