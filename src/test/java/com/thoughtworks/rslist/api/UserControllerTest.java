@@ -109,10 +109,11 @@ class UserControllerTest {
     @Autowired
     RsEventRespository rsEventRespository;
 
-//    @BeforeEach
-//    void clean_tables(){
-//        userRepository.deleteAll();
-//    }
+    @BeforeEach
+    void clean_tables(){
+        userRepository.deleteAll();
+        rsEventRespository.deleteAll();
+    }
 
 
     @Test

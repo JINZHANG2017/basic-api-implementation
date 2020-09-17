@@ -73,7 +73,7 @@ public class UserController {
     @Transactional
     public void delUserById(@PathVariable Integer id){
         userRepository.deleteById(id);
-        rsEventRespository.deleteAllByUserId(id);
+        //rsEventRespository.deleteAllByUserId(id);
     }
 
 }
