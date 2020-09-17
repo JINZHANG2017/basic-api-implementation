@@ -298,6 +298,7 @@ class RsControllerTest {
     @Test
     void should_return_400_when_rs_index_not_legal() throws Exception {
         mockMvc.perform(get("/rs/99"))
+                .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error", is("invalid index")));
     }
 
