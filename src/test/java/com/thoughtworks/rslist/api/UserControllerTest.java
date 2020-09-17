@@ -1,7 +1,9 @@
 package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.dto.UserDto;
+import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.entity.UserEntity;
+import com.thoughtworks.rslist.repository.RsEventRespository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.util.JsonHelper;
 import org.junit.jupiter.api.BeforeEach;
@@ -104,6 +106,8 @@ class UserControllerTest {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    RsEventRespository rsEventRespository;
 
 //    @BeforeEach
 //    void clean_tables(){
@@ -169,4 +173,33 @@ class UserControllerTest {
                 .andExpect((status().isBadRequest()));
     }
 
+    @Test
+    void should_delete_rsevent_when_delete_user_from_database() throws Exception {
+        UserEntity userEntity=UserEntity.builder()
+                .name("newuser")
+                .age(20)
+                .email("1@t.com")
+                .gender("男")
+                .phone("13345678900").build();
+        userRepository.save(userEntity);
+        RsEventEntity rsEventEntity=RsEventEntity.builder()
+                .eventName("event 0")
+                .keyWord("key")
+                .userId(userEntity.getId())
+                .build();
+        rsEventRespository.save(rsEventEntity);
+//        mockMvc.perform(get("/user/{id}",userEntity.getId()))
+//                .andExpect((status().isOk()))
+//                .andExpect(jsonPath("$.id", is(1)))
+//                .andExpect(jsonPath("$.name", is("newuser")));
+        mockMvc.perform(delete("/user/{id}",userEntity.getId()))
+                .andExpect((status().isNoContent()));
+//        mockMvc.perform(get("/user/{id}",userEntity.getId()))
+//                .andExpect((status().isBadRequest()));
+        List<UserEntity> userEntityList=userRepository.findAll();
+        List<RsEventEntity> rsEventEntityList = rsEventRespository.findAll();
+
+        assertEquals(0,userEntityList.size());
+        assertEquals(0,rsEventEntityList.size());
+    }
 }

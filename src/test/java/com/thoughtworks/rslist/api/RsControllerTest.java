@@ -341,4 +341,7 @@ class RsControllerTest {
         List<RsEventEntity> rsEventEntityList=rsEventRespository.findAll();
         assertEquals(0,rsEventEntityList.size());
     }
+
+//    @Test
+//    void should_delete
 }

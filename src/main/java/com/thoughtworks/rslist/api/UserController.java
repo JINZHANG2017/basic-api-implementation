@@ -3,12 +3,15 @@ package com.thoughtworks.rslist.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.entity.UserEntity;
+import com.thoughtworks.rslist.repository.RsEventRespository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.util.JsonHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +35,14 @@ public class UserController {
     final
     UserRepository userRepository;
 
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, RsEventRespository rsEventRespository) {
         this.userRepository = userRepository;
+        this.rsEventRespository = rsEventRespository;
     }
+
+    final
+    RsEventRespository rsEventRespository;
+
 
     @PostMapping("/user/register")
     public ResponseEntity register(@Valid @RequestBody UserDto user){
@@ -60,14 +68,12 @@ public class UserController {
         return ResponseEntity.ok(userEntity.get());
     }
 
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
     @DeleteMapping("/user/{id}")
-    public ResponseEntity delUserById(@PathVariable Integer id){
-        Optional<UserEntity> userEntity = userRepository.findById(id);
-        if(!userEntity.isPresent()){
-            return ResponseEntity.badRequest().build();
-        }
-        userRepository.delete(userEntity.get());
-        return ResponseEntity.ok().build();
+    @Transactional
+    public void delUserById(@PathVariable Integer id){
+        userRepository.deleteById(id);
+        rsEventRespository.deleteAllByUserId(id);
     }
 
 }
