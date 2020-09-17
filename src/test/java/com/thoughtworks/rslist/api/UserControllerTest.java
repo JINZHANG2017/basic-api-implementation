@@ -12,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -110,12 +112,9 @@ class UserControllerTest {
                 .build();
         userRepository.save(user);
 
-        String jsonValue="";
-
-        mockMvc.perform(post("/rs/event")
-                .content(jsonValue)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+        List<UserEntity> userList = userRepository.findAll();
+        assertEquals(1,userList.size());
+        assertEquals("男",userList.get(0).getGender());
 
     }
 }
