@@ -95,22 +95,28 @@ class UserControllerTest {
         UserDto user = new UserDto("1234567", "男", 20, "123@test.com", "13345678900");
         String json = JsonHelper.getString(user);
         mockMvc.perform(post("/user/register").content(json).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Autowired
     UserRepository userRepository;
     @Test
-    void should_get_user_from_database() throws Exception {
+    void should_register_user_save_to_database() throws Exception {
         //to user = new UserDto("1234567", "男", 20, "123@test.com", "13345678900");
-        UserEntity user= UserEntity.builder()
-                .name("1234567")
-                .gender("男")
-                .age(20)
-                .email("123@test.com")
-                .phone("13345678900")
-                .build();
-        userRepository.save(user);
+//        UserEntity user= UserEntity.builder()
+//                .name("1234567")
+//                .gender("男")
+//                .age(20)
+//                .email("123@test.com")
+//                .phone("13345678900")
+//                .build();
+//        userRepository.save(user);
+        UserDto user = new UserDto("1234567", "男", 20, "123@test.com", "13345678900");
+        String json = JsonHelper.getString(user);
+        mockMvc.perform(post("/user/register")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
 
         List<UserEntity> userList = userRepository.findAll();
         assertEquals(1,userList.size());

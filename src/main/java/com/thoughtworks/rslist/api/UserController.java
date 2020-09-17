@@ -2,7 +2,10 @@ package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thoughtworks.rslist.dto.UserDto;
+import com.thoughtworks.rslist.entity.UserEntity;
+import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.util.JsonHelper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,10 +30,26 @@ public class UserController {
 //        tempUsers.add(user3);
 //        return tempUsers;
 //    }
+
+    final
+    UserRepository userRepository;
+
+    public UserController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     @PostMapping("/user/register")
     public ResponseEntity register(@Valid @RequestBody UserDto user){
 
-        users.add(user);
+//        users.add(user);
+        UserEntity userEntity=UserEntity.builder()
+                .age(user.getAge())
+                .email(user.getEmail())
+                .gender(user.getGender())
+                .name(user.getName())
+                .phone(user.getPhone())
+                .build();
+        userRepository.save(userEntity);
         return ResponseEntity.created(null).build();
     }
 
