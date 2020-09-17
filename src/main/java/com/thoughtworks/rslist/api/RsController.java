@@ -72,6 +72,10 @@ public class RsController {
 
     @PostMapping("/rs/event")
     public ResponseEntity postOneRs(@Valid @RequestBody RsEvent rsEvent) throws JsonProcessingException {
+        if(!userRepository.existsById(rsEvent.getUserId())){
+            return ResponseEntity.badRequest().build();
+        }
+
         RsEventEntity rsEventEntity=RsEventEntity.builder()
                 .eventName(rsEvent.getEventName())
                 .keyWord(rsEvent.getKeyWord())

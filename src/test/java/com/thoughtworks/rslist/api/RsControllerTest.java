@@ -8,6 +8,7 @@ import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.repository.RsEventRespository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.util.JsonHelper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -305,6 +306,12 @@ class RsControllerTest {
     @Autowired
     RsEventRespository rsEventRespository;
 
+    @BeforeEach
+    void setUp(){
+        userRepository.deleteAll();
+        rsEventRespository.deleteAll();
+    }
+
     @Test
     void should_add_one_rs_event_to_database_when_user_exists() throws Exception {
         UserEntity userEntity = UserEntity.builder()
@@ -320,5 +327,18 @@ class RsControllerTest {
         List<RsEventEntity> rsEventEntityList=rsEventRespository.findAll();
         assertEquals(1,rsEventEntityList.size());
         assertEquals("猪肉涨价了",rsEventEntityList.get(0).getEventName());
+    }
+
+
+    @Test
+    void should_add_one_rs_event_to_database_failed_when_user_doesnot_exists() throws Exception {
+
+        String json = "{\"eventName\":\"猪肉涨价了\",\"keyWord\":\"经济\",\"userId\": 1}";
+        mockMvc.perform(post("/rs/event")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        List<RsEventEntity> rsEventEntityList=rsEventRespository.findAll();
+        assertEquals(0,rsEventEntityList.size());
     }
 }
