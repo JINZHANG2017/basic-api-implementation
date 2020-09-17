@@ -5,7 +5,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.dto.RsEvent;
 import com.thoughtworks.rslist.dto.UserDto;
+import com.thoughtworks.rslist.entity.RsEventEntity;
+import com.thoughtworks.rslist.repository.RsEventRespository;
+import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.util.JsonHelper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,13 +28,21 @@ public class RsController {
     private List<UserDto> usersList = initUsersList();
     private List<RsEvent> rsList = initRsList();
 
+    private final UserRepository userRepository;
+    
+    private final RsEventRespository rsEventRespository;
+
+    public RsController(RsEventRespository rsEventRespository, UserRepository userRepository) {
+        this.rsEventRespository = rsEventRespository;
+        this.userRepository = userRepository;
+    }
 
     private List<RsEvent> initRsList() {
         List<RsEvent> tempRsList = new ArrayList<>();
 
-        tempRsList.add(new RsEvent("第一条事件", "无分类", usersList.get(0)));
-        tempRsList.add(new RsEvent("第二条事件", "无分类", usersList.get(1)));
-        tempRsList.add(new RsEvent("第三条事件", "无分类", usersList.get(2)));
+//        tempRsList.add(new RsEvent("第一条事件", "无分类", usersList.get(0)));
+//        tempRsList.add(new RsEvent("第二条事件", "无分类", usersList.get(1)));
+//        tempRsList.add(new RsEvent("第三条事件", "无分类", usersList.get(2)));
         return tempRsList;
     }
 
@@ -60,14 +72,16 @@ public class RsController {
 
     @PostMapping("/rs/event")
     public ResponseEntity postOneRs(@Valid @RequestBody RsEvent rsEvent) throws JsonProcessingException {
-        UserDto user = rsEvent.getUser();
-        if (user != null) {
-            if (usersList.stream().filter(u -> u.getName().equals(user.getName())).count() == 0) {
-                usersList.add(user);
-            }
-        }
-        rsList.add(rsEvent);
-        return ResponseEntity.created(null).header("index", String.valueOf(usersList.indexOf(user))).build();
+        RsEventEntity rsEventEntity=RsEventEntity.builder()
+                .eventName(rsEvent.getEventName())
+                .keyWord(rsEvent.getKeyWord())
+                .userId(rsEvent.getUserId())
+                .build();
+        rsEventRespository.save(rsEventEntity);
+//        rsList.add(rsEvent);
+
+        return ResponseEntity.created(null).header("index","1").build();
+//        return ResponseEntity.created(null).header("index", String.valueOf(usersList.indexOf(user))).build();
     }
 
     @PutMapping("/rs/event")
