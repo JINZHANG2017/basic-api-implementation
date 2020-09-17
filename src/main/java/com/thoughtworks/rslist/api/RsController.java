@@ -102,7 +102,8 @@ public class RsController {
         return ResponseEntity.ok(JsonHelper.getString(usersList));
     }
 
-    @ExceptionHandler(IndexOutOfBoundsException.class)
+    //HttpMessageNotReadableException
+    @ExceptionHandler({IndexOutOfBoundsException.class})
     public ResponseEntity<CommonError> handleException(Exception ex){
         CommonError commonError=new CommonError();
         commonError.setError(ex.getMessage());
