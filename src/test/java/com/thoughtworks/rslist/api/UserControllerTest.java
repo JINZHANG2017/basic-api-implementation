@@ -4,6 +4,7 @@ import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.util.JsonHelper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,8 +15,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -100,6 +104,14 @@ class UserControllerTest {
 
     @Autowired
     UserRepository userRepository;
+
+
+//    @BeforeEach
+//    void clean_tables(){
+//        userRepository.deleteAll();
+//    }
+
+
     @Test
     void should_register_user_save_to_database() throws Exception {
         //to user = new UserDto("1234567", "男", 20, "123@test.com", "13345678900");
@@ -123,4 +135,20 @@ class UserControllerTest {
         assertEquals("男",userList.get(0).getGender());
 
     }
+
+    @Test
+    void should_get_user_from_database_by_id() throws Exception {
+        UserEntity userEntity=UserEntity.builder()
+                .name("newuser")
+                .age(20)
+                .email("1@t.com")
+                .gender("男")
+                .phone("13345678900").build();
+        userRepository.save(userEntity);
+        mockMvc.perform(get("/user/{id}",userEntity.getId()))
+                .andExpect((status().isOk()))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.name", is("newuser")));
+    }
+
 }
