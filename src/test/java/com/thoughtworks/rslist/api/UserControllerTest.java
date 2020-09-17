@@ -109,6 +109,7 @@ class UserControllerTest {
                 .phone("13345678900")
                 .build();
         userRepository.save(user);
+
         String jsonValue="";
 
         mockMvc.perform(post("/rs/event")

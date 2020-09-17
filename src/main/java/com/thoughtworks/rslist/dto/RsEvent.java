@@ -39,6 +39,7 @@ public class RsEvent {
     @NotEmpty
     private String keyWord;
     @NotNull
+    @Valid
     private UserDto user;
 
     //加注释之后提交也是null

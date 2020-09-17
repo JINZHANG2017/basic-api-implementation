@@ -276,12 +276,13 @@ class RsControllerTest {
 
     @Test
     void should_add_a_header_when_add_one_rs_event() throws Exception {
-
         UserDto user=new UserDto("newuser","男",20,"123@test.com","13345678900");
         RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济",user);
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(rsEvent);
-        MvcResult mvcResult=mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
+        MvcResult mvcResult=mockMvc.perform(post("/rs/event")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated()).andReturn();
         String index=mvcResult.getResponse().getHeader("index");
         assertEquals("3",index);
