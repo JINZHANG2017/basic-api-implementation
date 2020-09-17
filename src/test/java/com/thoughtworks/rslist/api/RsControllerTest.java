@@ -291,6 +291,15 @@ class RsControllerTest {
     @Test
     void should_return_400_when_range_not_legal() throws Exception {
         mockMvc.perform(get("/rs/list?start=-1&end=3"))
-                .andExpect((status().isBadRequest()));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("invalid request param")));
     }
+
+    @Test
+    void should_return_400_when_rs_index_not_legal() throws Exception {
+        mockMvc.perform(get("/rs/99"))
+                .andExpect(jsonPath("$.error", is("invalid index")));
+    }
+
+
 }

@@ -51,11 +51,17 @@ public class RsController {
         if (start == null && end == null) {
             return ResponseEntity.ok(rsList);
         }
+        if(start<=0||start>rsList.size()||end<=start||end>rsList.size()){
+            throw new IndexOutOfBoundsException("invalid request param");
+        }
         return ResponseEntity.ok(rsList.subList(start - 1, end));
     }
 
     @GetMapping("/rs/{id}")
     public ResponseEntity<RsEvent> getOneRs(@PathVariable Integer id) {
+        if(id<=0||id>rsList.size()){
+            throw new IndexOutOfBoundsException("invalid index");
+        }
         return ResponseEntity.ok(rsList.get(id - 1));
     }
 
@@ -99,7 +105,7 @@ public class RsController {
     @ExceptionHandler(IndexOutOfBoundsException.class)
     public ResponseEntity<CommonError> handleException(Exception ex){
         CommonError commonError=new CommonError();
-        commonError.setError("invalid index");
+        commonError.setError(ex.getMessage());
         return ResponseEntity.badRequest().body(commonError);
     }
 }
