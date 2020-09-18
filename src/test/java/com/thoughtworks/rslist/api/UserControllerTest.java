@@ -186,7 +186,7 @@ class UserControllerTest {
         RsEventEntity rsEventEntity=RsEventEntity.builder()
                 .eventName("event 0")
                 .keyWord("key")
-                .userId(userEntity.getId())
+                .user(userEntity)
                 .build();
         rsEventRespository.save(rsEventEntity);
 //        mockMvc.perform(get("/user/{id}",userEntity.getId()))

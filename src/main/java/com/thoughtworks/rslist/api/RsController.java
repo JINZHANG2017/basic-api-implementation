@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.dto.RsEvent;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.entity.RsEventEntity;
+import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.repository.RsEventRespository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.util.JsonHelper;
@@ -21,6 +22,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class RsController {
@@ -29,7 +31,7 @@ public class RsController {
     private List<RsEvent> rsList = initRsList();
 
     private final UserRepository userRepository;
-    
+
     private final RsEventRespository rsEventRespository;
 
     public RsController(RsEventRespository rsEventRespository, UserRepository userRepository) {
@@ -67,24 +69,40 @@ public class RsController {
 
     @GetMapping("/rs/{id}")
     public ResponseEntity<RsEvent> getOneRs(@PathVariable Integer id) {
-        return ResponseEntity.ok(rsList.get(id - 1));
+//        return ResponseEntity.ok(rsList.get(id - 1));
+        Optional<RsEventEntity> result = rsEventRespository.findById(id);
+        if (!result.isPresent()) {
+//            throw new RequestNotValidException("invalid id");
+            return ResponseEntity.badRequest().build();
+        }
+        RsEventEntity rsEventEntity = result.get();
+        UserEntity userEntity =rsEventEntity.getUser();
+        return ResponseEntity.ok(RsEvent.builder()
+                .eventName(rsEventEntity.getEventName())
+                .keyWord(rsEventEntity.getKeyWord())
+                .user(new UserDto(userEntity.getName(),
+                        userEntity.getGender(),
+                        userEntity.getAge(),
+                        userEntity.getEmail(),
+                        userEntity.getPhone()))
+                .build());
     }
 
     @PostMapping("/rs/event")
     public ResponseEntity postOneRs(@Valid @RequestBody RsEvent rsEvent) throws JsonProcessingException {
-        if(!userRepository.existsById(rsEvent.getUserId())){
+        if (!userRepository.existsById(rsEvent.getUserId())) {
             return ResponseEntity.badRequest().build();
         }
 
-        RsEventEntity rsEventEntity=RsEventEntity.builder()
+        RsEventEntity rsEventEntity = RsEventEntity.builder()
                 .eventName(rsEvent.getEventName())
                 .keyWord(rsEvent.getKeyWord())
-                .userId(rsEvent.getUserId())
+//                .userId(rsEvent.getUserId())
                 .build();
         rsEventRespository.save(rsEventEntity);
 //        rsList.add(rsEvent);
 
-        return ResponseEntity.created(null).header("index","1").build();
+        return ResponseEntity.created(null).header("index", "1").build();
 //        return ResponseEntity.created(null).header("index", String.valueOf(usersList.indexOf(user))).build();
     }
 
@@ -105,7 +123,7 @@ public class RsController {
     public ResponseEntity delOneRs(@RequestParam Integer id) {
         RsEvent rsEvent = rsList.get(id - 1);
         rsList.remove(rsEvent);
-        return  ResponseEntity.ok().build();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/user/list")

@@ -344,4 +344,25 @@ class RsControllerTest {
 
 //    @Test
 //    void should_delete
+
+    @Test
+    void should_get_a_rs_event_with_user() throws Exception {
+        UserEntity userEntity = UserEntity.builder()
+                .name("newuser")
+                .age(20)
+                .email("1@t.com")
+                .gender("男")
+                .phone("13345678900").build();
+        userRepository.save(userEntity);
+        RsEventEntity rsEventEntity=RsEventEntity.builder()
+                .eventName("event 0")
+                .keyWord("key")
+                .user(userEntity)
+                .build();
+        rsEventRespository.save(rsEventEntity);
+        mockMvc.perform(get("/rs/{id}",rsEventEntity.getId()))
+                .andExpect((status().isOk()))
+                .andExpect(jsonPath("$.eventName", is("event 0")))
+                .andExpect(jsonPath("$.user.name", is("newuser")));
+    }
 }

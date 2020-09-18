@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class RsEvent {
 
 
@@ -38,6 +40,19 @@ public class RsEvent {
 //    @NotNull
 //    @Valid
 //    private UserDto user;
+
+
+    private  UserDto user;
+
+    @JsonProperty
+    public UserDto getUser() {
+        return user;
+    }
+
+    @JsonIgnore
+    public void setUser(UserDto user) {
+        this.user = user;
+    }
 
     @NotNull
     private Integer userId;
