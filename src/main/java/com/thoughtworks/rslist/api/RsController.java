@@ -19,10 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class RsController {
@@ -129,5 +126,22 @@ public class RsController {
     @GetMapping("/user/list")
     public ResponseEntity<String> getList() throws JsonProcessingException {
         return ResponseEntity.ok(JsonHelper.getString(usersList));
+    }
+
+    @PatchMapping("/rs/{id}")
+    public ResponseEntity patch(@PathVariable Integer id, @RequestBody Map<String,String> params) throws JsonProcessingException {
+//        ,@RequestBody String eventName,@RequestBody String keyWord,@RequestBody Integer userId
+        Optional<RsEventEntity> rsEventEntityOpt = rsEventRespository.findById(id);
+        if(!rsEventEntityOpt.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+        RsEventEntity rsEventEntity = rsEventEntityOpt.get();
+        if(!rsEventEntity.getUser().getId().toString().equals((params.get("userId")))){
+            return ResponseEntity.badRequest().build();
+        }
+        rsEventEntity.setEventName(params.get("eventName"));;
+        rsEventEntity.setKeyWord(params.get("keyWord"));
+        rsEventRespository.save(rsEventEntity);
+        return ResponseEntity.ok().build();
     }
 }

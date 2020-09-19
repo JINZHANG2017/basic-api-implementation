@@ -365,4 +365,43 @@ class RsControllerTest {
                 .andExpect(jsonPath("$.eventName", is("event 0")))
                 .andExpect(jsonPath("$.user.name", is("newuser")));
     }
+
+
+//    request: patch /rs/{rsEventId}
+//    requestBody: {
+//                    “eventName”: “新的热搜事件名”,
+//                     “keyword”: “新的关键字”,
+//                     “userId”: “user_id”
+//    }
+//    接口要求：当userId和rsEventId所关联的User匹配时，更新rsEvent信息
+//    当userId和rsEventId所关联的User不匹配时，返回400
+//            userId为必传字段
+//    当只传了eventName没传keyword时只更新eventName
+//            当只传了keyword没传eventName时只更新keyword
+
+    @Test
+    void should_patch_rsevent_when_user_matches() throws Exception {
+        UserEntity userEntity = UserEntity.builder()
+                .name("newuser")
+                .age(20)
+                .email("1@t.com")
+                .gender("男")
+                .phone("13345678900").build();
+        userRepository.save(userEntity);
+        RsEventEntity rsEventEntity=RsEventEntity.builder()
+                .eventName("event 0")
+                .keyWord("key")
+                .user(userEntity)
+                .build();
+        rsEventRespository.save(rsEventEntity);
+        String json="{\"eventName\":\"新的热搜事件名\",\"keyWord\":\"新的关键字\",\"userId\": " + userEntity.getId() + "}";
+        mockMvc.perform(patch("/rs/{id}",rsEventEntity.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect((status().isOk()));
+        mockMvc.perform(get("/rs/{id}",rsEventEntity.getId()))
+                .andExpect((status().isOk()))
+                .andExpect(jsonPath("$.eventName", is("新的热搜事件名")))
+                .andExpect(jsonPath("$.keyWord", is("新的关键字")));
+    }
 }
