@@ -169,7 +169,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.name", is("newuser")));
         mockMvc.perform(delete("/user/{id}",userEntity.getId()))
-                .andExpect((status().isOk()));
+                .andExpect((status().isNoContent()));
         mockMvc.perform(get("/user/{id}",userEntity.getId()))
                 .andExpect((status().isBadRequest()));
     }

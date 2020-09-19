@@ -312,22 +312,22 @@ class RsControllerTest {
         rsEventRespository.deleteAll();
     }
 
-    @Test
-    void should_add_one_rs_event_to_database_when_user_exists() throws Exception {
-        UserEntity userEntity = UserEntity.builder()
-                .name("newuser")
-                .age(20)
-                .email("1@t.com")
-                .gender("男")
-                .phone("13345678900").build();
-        userRepository.save(userEntity);
-        String json = "{\"eventName\":\"猪肉涨价了\",\"keyWord\":\"经济\",\"userId\": " + userEntity.getId() + "}";
-        mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
-        List<RsEventEntity> rsEventEntityList = rsEventRespository.findAll();
-        assertEquals(1, rsEventEntityList.size());
-        assertEquals("猪肉涨价了", rsEventEntityList.get(0).getEventName());
-    }
+//    @Test
+//    void should_add_one_rs_event_to_database_when_user_exists() throws Exception {
+//        UserEntity userEntity = UserEntity.builder()
+//                .name("newuser")
+//                .age(20)
+//                .email("1@t.com")
+//                .gender("男")
+//                .phone("13345678900").build();
+//        userRepository.save(userEntity);
+//        String json = "{\"eventName\":\"猪肉涨价了\",\"keyWord\":\"经济\",\"userId\": " + userEntity.getId() + "}";
+//        mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isCreated());
+//        List<RsEventEntity> rsEventEntityList = rsEventRespository.findAll();
+//        assertEquals(1, rsEventEntityList.size());
+//        assertEquals("猪肉涨价了", rsEventEntityList.get(0).getEventName());
+//    }
 
 
     @Test
