@@ -139,8 +139,10 @@ public class RsController {
         if(!rsEventEntity.getUser().getId().toString().equals((params.get("userId")))){
             return ResponseEntity.badRequest().build();
         }
+        if(params.keySet().contains("keyWord")&&!"".equals(params.get("keyWord"))){
+            rsEventEntity.setKeyWord(params.get("keyWord"));
+        }
         rsEventEntity.setEventName(params.get("eventName"));;
-        rsEventEntity.setKeyWord(params.get("keyWord"));
         rsEventRespository.save(rsEventEntity);
         return ResponseEntity.ok().build();
     }
