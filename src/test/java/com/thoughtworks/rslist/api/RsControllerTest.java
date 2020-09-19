@@ -96,15 +96,16 @@ class RsControllerTest {
 
     @Test
     void should_get_range_rs() throws Exception {
-        mockMvc.perform(get("/rs/list?start=1&end=3"))
+        add3RsToDB();
+        mockMvc.perform(get("/rs/list?start=2&end=4"))
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
-                .andExpect(jsonPath("$[0].keyWord", is("无分类")))
-                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
-                .andExpect(jsonPath("$[1].keyWord", is("无分类")))
-                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
-                .andExpect(jsonPath("$[2].keyWord", is("无分类")));
+                .andExpect(jsonPath("$[0].eventName", is("event 0")))
+                .andExpect(jsonPath("$[0].keyWord", is("key0")))
+                .andExpect(jsonPath("$[1].eventName", is("event 1")))
+                .andExpect(jsonPath("$[1].keyWord", is("key1")))
+                .andExpect(jsonPath("$[2].eventName", is("event 2")))
+                .andExpect(jsonPath("$[2].keyWord", is("key2")));
     }
 
     @Test
