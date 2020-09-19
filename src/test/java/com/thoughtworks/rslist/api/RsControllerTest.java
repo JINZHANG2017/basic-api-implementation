@@ -404,4 +404,26 @@ class RsControllerTest {
                 .andExpect(jsonPath("$.eventName", is("新的热搜事件名")))
                 .andExpect(jsonPath("$.keyWord", is("新的关键字")));
     }
+
+    @Test
+    void should_return_400_when_user_not_matches() throws Exception {
+        UserEntity userEntity = UserEntity.builder()
+                .name("newuser")
+                .age(20)
+                .email("1@t.com")
+                .gender("男")
+                .phone("13345678900").build();
+        userRepository.save(userEntity);
+        RsEventEntity rsEventEntity=RsEventEntity.builder()
+                .eventName("event 0")
+                .keyWord("key")
+                .user(userEntity)
+                .build();
+        rsEventRespository.save(rsEventEntity);
+        String json="{\"eventName\":\"新的热搜事件名\",\"keyWord\":\"新的关键字\",\"userId\": " + userEntity.getId()+1 + "}";
+        mockMvc.perform(patch("/rs/{id}",rsEventEntity.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect((status().isBadRequest()));
+    }
 }
