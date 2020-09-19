@@ -92,4 +92,39 @@ class VoteControllerTest {
         assertEquals(1,votes.size());
         assertEquals(3,votes.get(0).getNum());
     }
+
+    @Test
+    void should_return_400_when_userVoteNum_less_than_voteNum() throws Exception {
+        UserEntity userEntity = UserEntity.builder()
+                .name("newuser")
+                .age(20)
+                .email("1@t.com")
+                .gender("男")
+                .phone("13345678900")
+                .voteNum(2).build();
+        userRepository.save(userEntity);
+        RsEventEntity rsEventEntity=RsEventEntity.builder()
+                .eventName("event 0")
+                .keyWord("key")
+                .user(userEntity)
+                .build();
+        rsEventRespository.save(rsEventEntity);
+        int voteNum=3;
+        String json="{\"voteNum\": \""+voteNum+"\",\"userId\": \""+userEntity.getId()+"\",\"voteTime\": \""+localDateTime.toString()+"\"}";
+//        VoteDto.builder()
+//                .voteNum(voteNum)
+//                .localDateTime(localDateTime)
+//                .userId()
+        mockMvc.perform(post("/rs/vote/{rsEventId}",rsEventEntity.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect((status().isBadRequest()));
+//        mockMvc.perform(get("/user/{id}",userEntity.getId()))
+//                .andExpect((status().isOk()))
+//                .andExpect(jsonPath("$.voteNum", is(7)))
+//                .andExpect(jsonPath("$.name", is("newuser")));
+        UserEntity userEnt = userRepository.findById(userEntity.getId()).get();
+        assertEquals(2,userEnt.getVoteNum());
+        assertEquals("newuser",userEntity.getName());
+    }
 }

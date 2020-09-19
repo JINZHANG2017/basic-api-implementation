@@ -38,7 +38,9 @@ public class VoteController {
             voteRespository.save(voteEntity);
             userEntity.setVoteNum(userEntity.getVoteNum()-voteNum);
             userRepository.save(userEntity);
+            return ResponseEntity.ok().build();
+        }else {
+            return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok().build();
     }
 }
