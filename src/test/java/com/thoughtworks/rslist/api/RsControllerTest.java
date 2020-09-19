@@ -267,16 +267,36 @@ class RsControllerTest {
 
     @Test
     void should_add_a_header_when_add_one_rs_event() throws Exception {
-        UserDto user = new UserDto("newuser", "男", 20, "123@test.com", "13345678900");
-        RsEventDto rsEventDto = new RsEventDto("猪肉涨价了", "经济");
-//        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", user);
+//        UserDto user = new UserDto("newuser", "男", 20, "123@test.com", "13345678900");
+//        RsEventDto rsEventDto = new RsEventDto("猪肉涨价了", "经济");
+////        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", user);
+//        String json = JsonHelper.getString(rsEventDto);
+//        MvcResult mvcResult = mockMvc.perform(post("/rs/event")
+//                .content(json)
+//                .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isCreated()).andReturn();
+//        String index = mvcResult.getResponse().getHeader("index");
+//        assertEquals("3", index);
+        UserEntity userEntity = UserEntity.builder()
+
+                .name("newuser")
+                .age(20)
+                .email("1@t.com")
+                .gender("男")
+                .phone("13345678900").build();
+        userRepository.save(userEntity);
+        UserDto userDto = userEntity.toUserDto();
+        RsEventDto rsEventDto = RsEventDto.builder()
+                .eventName("event 0")
+                .keyWord("key0")
+                .user(userDto)
+                .userId(userEntity.getId())
+                .build();
         String json = JsonHelper.getString(rsEventDto);
-        MvcResult mvcResult = mockMvc.perform(post("/rs/event")
-                .content(json)
-                .contentType(MediaType.APPLICATION_JSON))
+        MvcResult mvcResult = mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated()).andReturn();
         String index = mvcResult.getResponse().getHeader("index");
-        assertEquals("3", index);
+        assertEquals("2", index);
 
     }
 

@@ -105,7 +105,7 @@ public class RsController {
         rsEventRespository.save(rsEventEntity);
 //        rsList.add(rsEvent);
 
-        return ResponseEntity.created(null).header("index", "1").build();
+        return ResponseEntity.created(null).header("index", rsEventEntity.getId().toString()).build();
 //        return ResponseEntity.created(null).header("index", String.valueOf(usersList.indexOf(user))).build();
     }
 
