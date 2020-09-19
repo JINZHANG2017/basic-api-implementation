@@ -89,15 +89,15 @@ public class RsController {
     }
 
     @PostMapping("/rs/event")
-    public ResponseEntity postOneRs(@RequestBody RsEventDto rsEventDto) throws JsonProcessingException {
+    public ResponseEntity postOneRs(@Valid @RequestBody RsEventDto rsEventDto) throws JsonProcessingException {
         if (!userRepository.existsById(rsEventDto.getUserId())) {
             return ResponseEntity.badRequest().build();
         }
-
+        UserEntity userEntity = userRepository.findById(rsEventDto.getUserId()).get();
         RsEventEntity rsEventEntity = RsEventEntity.builder()
                 .eventName(rsEventDto.getEventName())
                 .keyWord(rsEventDto.getKeyWord())
-//                .userId(rsEvent.getUserId())
+                .user(userEntity)
                 .build();
         rsEventRespository.save(rsEventEntity);
 //        rsList.add(rsEvent);
@@ -108,12 +108,17 @@ public class RsController {
 
     @PutMapping("/rs/event")
     public ResponseEntity putOneRs(@RequestParam Integer id, @RequestBody RsEventDto rsEventDto) {
-        RsEventDto originRsEventDto = rsList.get(id - 1);
+//        RsEventDto originRsEventDto = rsList.get(id - 1);
+        RsEventEntity rsEventEntity=rsEventRespository.findById(id).get();
         if (rsEventDto.getEventName() != null) {
-            originRsEventDto.setEventName(rsEventDto.getEventName());
+            //originRsEventDto.setEventName(rsEventDto.getEventName());
+            rsEventEntity.setEventName(rsEventDto.getEventName());
+            rsEventRespository.save(rsEventEntity);
         }
         if (rsEventDto.getKeyWord() != null) {
-            originRsEventDto.setKeyWord(rsEventDto.getKeyWord());
+//            originRsEventDto.setKeyWord(rsEventDto.getKeyWord());
+            rsEventEntity.setKeyWord(rsEventDto.getKeyWord());
+            rsEventRespository.save(rsEventEntity);
         }
         return ResponseEntity.status(200).build();
 

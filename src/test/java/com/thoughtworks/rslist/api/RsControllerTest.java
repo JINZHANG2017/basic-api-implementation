@@ -139,29 +139,23 @@ class RsControllerTest {
 
     @Test
     void should_put_a_rs_eventName_is_null() throws Exception {
-        mockMvc.perform(get("/rs/list"))
-                .andExpect((status().isOk()))
-                .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
-                .andExpect(jsonPath("$[0].keyWord", is("无分类")))
-                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
-                .andExpect(jsonPath("$[1].keyWord", is("无分类")))
-                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
-                .andExpect(jsonPath("$[2].keyWord", is("无分类")));
+        add3RsToDB();
         RsEventDto rsEventDto = new RsEventDto(null, "政治");
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(rsEventDto);
-        mockMvc.perform((put("/rs/event?id=1")).content(json).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform((put("/rs/event?id=2")).content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect((status().isOk()));
-        mockMvc.perform(get("/rs/list"))
-                .andExpect((status().isOk()))
-                .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
-                .andExpect(jsonPath("$[0].keyWord", is("政治")))
-                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
-                .andExpect(jsonPath("$[1].keyWord", is("无分类")))
-                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
-                .andExpect(jsonPath("$[2].keyWord", is("无分类")));
+        RsEventEntity rsEventEntity = rsEventRespository.findById(2).get();
+        assertEquals("政治",rsEventEntity.getKeyWord());
+//        mockMvc.perform(get("/rs/list"))
+//                .andExpect((status().isOk()))
+//                .andExpect(jsonPath("$", hasSize(3)))
+//                .andExpect(jsonPath("$[0].eventName", is("event 0")))
+//                .andExpect(jsonPath("$[0].keyWord", is("政治")));
+//                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
+//                .andExpect(jsonPath("$[1].keyWord", is("无分类")))
+//                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+//                .andExpect(jsonPath("$[2].keyWord", is("无分类")));
 
     }
 
