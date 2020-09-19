@@ -126,8 +126,7 @@ public class RsController {
 
     @DeleteMapping("/rs/event")
     public ResponseEntity delOneRs(@RequestParam Integer id) {
-        RsEventDto rsEventDto = rsList.get(id - 1);
-        rsList.remove(rsEventDto);
+        rsEventRespository.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
