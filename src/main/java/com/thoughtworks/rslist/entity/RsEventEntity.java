@@ -33,7 +33,6 @@ public class RsEventEntity {
 
     public RsEventDto toRsEventDto(){
         return RsEventDto.builder().eventName(eventName)
-                .keyWord(keyWord)
-                .userId(user.getId()).build();
+                .keyWord(keyWord).build();
     }
 }

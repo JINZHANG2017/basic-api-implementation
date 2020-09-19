@@ -57,14 +57,14 @@ public class RsEventDto {
     @NotNull
     private Integer userId;
 
-    @JsonIgnore
-    public Integer getUserId() {
-        return userId;
-    }
-    @JsonProperty
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
+//    @JsonIgnore
+//    public Integer getUserId() {
+//        return userId;
+//    }
+//    @JsonProperty
+//    public void setUserId(Integer userId) {
+//        this.userId = userId;
+//    }
     //加注释之后提交也是null
     //@Valid
 //    @JsonIgnore

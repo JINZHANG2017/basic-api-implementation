@@ -1,5 +1,6 @@
 package com.thoughtworks.rslist.entity;
 
+import com.thoughtworks.rslist.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,4 +29,13 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
     private List<RsEventEntity> rsEventEntityList;
+
+    public UserDto toUserDto(){
+        return UserDto.builder()
+                .name(name)
+                .gender(gender)
+                .age(age)
+                .email(email)
+                .phone(phone).build();
+    }
 }
