@@ -36,7 +36,7 @@ class RsControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-    void add3RsToDB(){
+    void add3RsToDB() {
         UserEntity userEntity = UserEntity.builder()
                 .name("newuser")
                 .age(20)
@@ -44,25 +44,26 @@ class RsControllerTest {
                 .gender("男")
                 .phone("13345678900").build();
         userRepository.save(userEntity);
-        RsEventEntity rsEventEntity1=RsEventEntity.builder()
+        RsEventEntity rsEventEntity1 = RsEventEntity.builder()
                 .eventName("event 0")
                 .keyWord("key0")
                 .user(userEntity)
                 .build();
         rsEventRespository.save(rsEventEntity1);
-        RsEventEntity rsEventEntity2=RsEventEntity.builder()
+        RsEventEntity rsEventEntity2 = RsEventEntity.builder()
                 .eventName("event 1")
                 .keyWord("key1")
                 .user(userEntity)
                 .build();
         rsEventRespository.save(rsEventEntity2);
-        RsEventEntity rsEventEntity3=RsEventEntity.builder()
+        RsEventEntity rsEventEntity3 = RsEventEntity.builder()
                 .eventName("event 2")
                 .keyWord("key2")
                 .user(userEntity)
                 .build();
         rsEventRespository.save(rsEventEntity3);
     }
+
     @Test
     void should_get_rslist() throws Exception {
         add3RsToDB();
@@ -112,7 +113,7 @@ class RsControllerTest {
     void should_add_one_rs_event() throws Exception {
 
 //        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", user);
-        UserEntity userEntity=UserEntity.builder()
+        UserEntity userEntity = UserEntity.builder()
 
                 .name("newuser")
                 .age(20)
@@ -120,8 +121,8 @@ class RsControllerTest {
                 .gender("男")
                 .phone("13345678900").build();
         userRepository.save(userEntity);
-        UserDto userDto=userEntity.toUserDto();
-        RsEventDto rsEventDto=RsEventDto.builder()
+        UserDto userDto = userEntity.toUserDto();
+        RsEventDto rsEventDto = RsEventDto.builder()
                 .eventName("event 0")
                 .keyWord("key0")
                 .user(userDto)
@@ -131,9 +132,9 @@ class RsControllerTest {
         mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
         List<RsEventEntity> rsEventEntityList = rsEventRespository.findAll();
-        assertEquals(1,rsEventEntityList.size());
-        assertEquals("event 0",rsEventEntityList.get(0).getEventName());
-        assertEquals("key0",rsEventEntityList.get(0).getKeyWord());
+        assertEquals(1, rsEventEntityList.size());
+        assertEquals("event 0", rsEventEntityList.get(0).getEventName());
+        assertEquals("key0", rsEventEntityList.get(0).getKeyWord());
 
     }
 
@@ -141,12 +142,11 @@ class RsControllerTest {
     void should_put_a_rs_eventName_is_null() throws Exception {
         add3RsToDB();
         RsEventDto rsEventDto = new RsEventDto(null, "政治");
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(rsEventDto);
+        String json = JsonHelper.getString(rsEventDto);
         mockMvc.perform((put("/rs/event?id=2")).content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect((status().isOk()));
         RsEventEntity rsEventEntity = rsEventRespository.findById(2).get();
-        assertEquals("政治",rsEventEntity.getKeyWord());
+        assertEquals("政治", rsEventEntity.getKeyWord());
 //        mockMvc.perform(get("/rs/list"))
 //                .andExpect((status().isOk()))
 //                .andExpect(jsonPath("$", hasSize(3)))
@@ -161,58 +161,26 @@ class RsControllerTest {
 
     @Test
     void should_put_a_rs_keyWord_is_null() throws Exception {
-        mockMvc.perform(get("/rs/list"))
-                .andExpect((status().isOk()))
-                .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
-                .andExpect(jsonPath("$[0].keyWord", is("无分类")))
-                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
-                .andExpect(jsonPath("$[1].keyWord", is("无分类")))
-                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
-                .andExpect(jsonPath("$[2].keyWord", is("无分类")));
-        ObjectMapper objectMapper = new ObjectMapper();
-        RsEventDto rsEventDto2 = new RsEventDto("第二条事件2", null);
-        String json2 = objectMapper.writeValueAsString(rsEventDto2);
-        mockMvc.perform((put("/rs/event?id=2")).content(json2).contentType(MediaType.APPLICATION_JSON))
+        add3RsToDB();
+        RsEventDto rsEventDto = new RsEventDto("新事件", null);
+        String json = JsonHelper.getString(rsEventDto);
+        mockMvc.perform((put("/rs/event?id=2")).content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect((status().isOk()));
-        mockMvc.perform(get("/rs/list"))
-                .andExpect((status().isOk()))
-                .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
-                .andExpect(jsonPath("$[0].keyWord", is("无分类")))
-                .andExpect(jsonPath("$[1].eventName", is("第二条事件2")))
-                .andExpect(jsonPath("$[1].keyWord", is("无分类")))
-                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
-                .andExpect(jsonPath("$[2].keyWord", is("无分类")));
+        RsEventEntity rsEventEntity = rsEventRespository.findById(2).get();
+        assertEquals("新事件", rsEventEntity.getEventName());
 
     }
 
     @Test
     void should_put_a_rs3() throws Exception {
-        mockMvc.perform(get("/rs/list"))
-                .andExpect((status().isOk()))
-                .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
-                .andExpect(jsonPath("$[0].keyWord", is("无分类")))
-                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
-                .andExpect(jsonPath("$[1].keyWord", is("无分类")))
-                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
-                .andExpect(jsonPath("$[2].keyWord", is("无分类")));
-        ObjectMapper objectMapper = new ObjectMapper();
-        RsEventDto rsEventDto3 = new RsEventDto("第三条事件3", "情感");
-        String json3 = objectMapper.writeValueAsString(rsEventDto3);
-        mockMvc.perform((put("/rs/event?id=3")).content(json3).contentType(MediaType.APPLICATION_JSON))
+        add3RsToDB();
+        RsEventDto rsEventDto = new RsEventDto("新事件", "政治");
+        String json = JsonHelper.getString(rsEventDto);
+        mockMvc.perform((put("/rs/event?id=2")).content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect((status().isOk()));
-        mockMvc.perform(get("/rs/list"))
-                .andExpect((status().isOk()))
-                .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
-                .andExpect(jsonPath("$[0].keyWord", is("无分类")))
-                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
-                .andExpect(jsonPath("$[1].keyWord", is("无分类")))
-                .andExpect(jsonPath("$[2].eventName", is("第三条事件3")))
-                .andExpect(jsonPath("$[2].keyWord", is("情感")));
-
+        RsEventEntity rsEventEntity = rsEventRespository.findById(2).get();
+        assertEquals("新事件", rsEventEntity.getEventName());
+        assertEquals("政治", rsEventEntity.getKeyWord());
     }
 
     @Test
@@ -328,7 +296,7 @@ class RsControllerTest {
     RsEventRespository rsEventRespository;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         userRepository.deleteAll();
         rsEventRespository.deleteAll();
     }
@@ -345,9 +313,9 @@ class RsControllerTest {
         String json = "{\"eventName\":\"猪肉涨价了\",\"keyWord\":\"经济\",\"userId\": " + userEntity.getId() + "}";
         mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
-        List<RsEventEntity> rsEventEntityList=rsEventRespository.findAll();
-        assertEquals(1,rsEventEntityList.size());
-        assertEquals("猪肉涨价了",rsEventEntityList.get(0).getEventName());
+        List<RsEventEntity> rsEventEntityList = rsEventRespository.findAll();
+        assertEquals(1, rsEventEntityList.size());
+        assertEquals("猪肉涨价了", rsEventEntityList.get(0).getEventName());
     }
 
 
@@ -359,8 +327,8 @@ class RsControllerTest {
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
-        List<RsEventEntity> rsEventEntityList=rsEventRespository.findAll();
-        assertEquals(0,rsEventEntityList.size());
+        List<RsEventEntity> rsEventEntityList = rsEventRespository.findAll();
+        assertEquals(0, rsEventEntityList.size());
     }
 
 //    @Test
@@ -375,13 +343,13 @@ class RsControllerTest {
                 .gender("男")
                 .phone("13345678900").build();
         userRepository.save(userEntity);
-        RsEventEntity rsEventEntity=RsEventEntity.builder()
+        RsEventEntity rsEventEntity = RsEventEntity.builder()
                 .eventName("event 0")
                 .keyWord("key")
                 .user(userEntity)
                 .build();
         rsEventRespository.save(rsEventEntity);
-        mockMvc.perform(get("/rs/{id}",rsEventEntity.getId()))
+        mockMvc.perform(get("/rs/{id}", rsEventEntity.getId()))
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$.eventName", is("event 0")))
                 .andExpect(jsonPath("$.user.name", is("newuser")));
@@ -409,18 +377,18 @@ class RsControllerTest {
                 .gender("男")
                 .phone("13345678900").build();
         userRepository.save(userEntity);
-        RsEventEntity rsEventEntity=RsEventEntity.builder()
+        RsEventEntity rsEventEntity = RsEventEntity.builder()
                 .eventName("event 0")
                 .keyWord("key")
                 .user(userEntity)
                 .build();
         rsEventRespository.save(rsEventEntity);
-        String json="{\"eventName\":\"新的热搜事件名\",\"keyWord\":\"新的关键字\",\"userId\": " + userEntity.getId() + "}";
-        mockMvc.perform(patch("/rs/{id}",rsEventEntity.getId())
+        String json = "{\"eventName\":\"新的热搜事件名\",\"keyWord\":\"新的关键字\",\"userId\": " + userEntity.getId() + "}";
+        mockMvc.perform(patch("/rs/{id}", rsEventEntity.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect((status().isOk()));
-        mockMvc.perform(get("/rs/{id}",rsEventEntity.getId()))
+        mockMvc.perform(get("/rs/{id}", rsEventEntity.getId()))
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$.eventName", is("新的热搜事件名")))
                 .andExpect(jsonPath("$.keyWord", is("新的关键字")));
@@ -435,14 +403,14 @@ class RsControllerTest {
                 .gender("男")
                 .phone("13345678900").build();
         userRepository.save(userEntity);
-        RsEventEntity rsEventEntity=RsEventEntity.builder()
+        RsEventEntity rsEventEntity = RsEventEntity.builder()
                 .eventName("event 0")
                 .keyWord("key")
                 .user(userEntity)
                 .build();
         rsEventRespository.save(rsEventEntity);
-        String json="{\"eventName\":\"新的热搜事件名\",\"keyWord\":\"新的关键字\",\"userId\": " + userEntity.getId()+1 + "}";
-        mockMvc.perform(patch("/rs/{id}",rsEventEntity.getId())
+        String json = "{\"eventName\":\"新的热搜事件名\",\"keyWord\":\"新的关键字\",\"userId\": " + userEntity.getId() + 1 + "}";
+        mockMvc.perform(patch("/rs/{id}", rsEventEntity.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect((status().isBadRequest()));
@@ -457,27 +425,27 @@ class RsControllerTest {
                 .gender("男")
                 .phone("13345678900").build();
         userRepository.save(userEntity);
-        RsEventEntity rsEventEntity=RsEventEntity.builder()
+        RsEventEntity rsEventEntity = RsEventEntity.builder()
                 .eventName("event 0")
                 .keyWord("key")
                 .user(userEntity)
                 .build();
         rsEventRespository.save(rsEventEntity);
-        String json="{\"eventName\":\"新的热搜事件名\",\"keyWord\":\"\",\"userId\": " + userEntity.getId()+ "}";
-        mockMvc.perform(patch("/rs/{id}",rsEventEntity.getId())
+        String json = "{\"eventName\":\"新的热搜事件名\",\"keyWord\":\"\",\"userId\": " + userEntity.getId() + "}";
+        mockMvc.perform(patch("/rs/{id}", rsEventEntity.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect((status().isOk()));
-        mockMvc.perform(get("/rs/{id}",rsEventEntity.getId()))
+        mockMvc.perform(get("/rs/{id}", rsEventEntity.getId()))
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$.eventName", is("新的热搜事件名")))
                 .andExpect(jsonPath("$.keyWord", is("key")));
-        json="{\"eventName\":\"新的热搜事件名2\",\"userId\": " + userEntity.getId()+ "}";
-        mockMvc.perform(patch("/rs/{id}",rsEventEntity.getId())
+        json = "{\"eventName\":\"新的热搜事件名2\",\"userId\": " + userEntity.getId() + "}";
+        mockMvc.perform(patch("/rs/{id}", rsEventEntity.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect((status().isOk()));
-        mockMvc.perform(get("/rs/{id}",rsEventEntity.getId()))
+        mockMvc.perform(get("/rs/{id}", rsEventEntity.getId()))
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$.eventName", is("新的热搜事件名2")))
                 .andExpect(jsonPath("$.keyWord", is("key")));
@@ -492,27 +460,27 @@ class RsControllerTest {
                 .gender("男")
                 .phone("13345678900").build();
         userRepository.save(userEntity);
-        RsEventEntity rsEventEntity=RsEventEntity.builder()
+        RsEventEntity rsEventEntity = RsEventEntity.builder()
                 .eventName("event 0")
                 .keyWord("key")
                 .user(userEntity)
                 .build();
         rsEventRespository.save(rsEventEntity);
-        String json="{\"eventName\":\"\",\"keyWord\":\"新的keyWord\",\"userId\": " + userEntity.getId()+ "}";
-        mockMvc.perform(patch("/rs/{id}",rsEventEntity.getId())
+        String json = "{\"eventName\":\"\",\"keyWord\":\"新的keyWord\",\"userId\": " + userEntity.getId() + "}";
+        mockMvc.perform(patch("/rs/{id}", rsEventEntity.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect((status().isOk()));
-        mockMvc.perform(get("/rs/{id}",rsEventEntity.getId()))
+        mockMvc.perform(get("/rs/{id}", rsEventEntity.getId()))
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$.eventName", is("event 0")))
                 .andExpect(jsonPath("$.keyWord", is("新的keyWord")));
-        json="{\"keyWord\":\"新的keyWord2\",\"userId\": " + userEntity.getId()+ "}";
-        mockMvc.perform(patch("/rs/{id}",rsEventEntity.getId())
+        json = "{\"keyWord\":\"新的keyWord2\",\"userId\": " + userEntity.getId() + "}";
+        mockMvc.perform(patch("/rs/{id}", rsEventEntity.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect((status().isOk()));
-        mockMvc.perform(get("/rs/{id}",rsEventEntity.getId()))
+        mockMvc.perform(get("/rs/{id}", rsEventEntity.getId()))
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$.eventName", is("event 0")))
                 .andExpect(jsonPath("$.keyWord", is("新的keyWord2")));
