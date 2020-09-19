@@ -90,6 +90,9 @@ public class RsController {
 
     @PostMapping("/rs/event")
     public ResponseEntity postOneRs(@Valid @RequestBody RsEventDto rsEventDto) throws JsonProcessingException {
+        if(rsEventDto.getUserId()==null){
+            return ResponseEntity.badRequest().build();
+        }
         if (!userRepository.existsById(rsEventDto.getUserId())) {
             return ResponseEntity.badRequest().build();
         }

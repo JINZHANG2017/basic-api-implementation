@@ -37,12 +37,12 @@ public class RsEventDto {
     private String eventName;
     @NotEmpty
     private String keyWord;
-//    @NotNull
-//    @Valid
-//    private UserDto user;
+    @NotNull
+    @Valid
+    private UserDto user;
 
 
-    private  UserDto user;
+//    private  UserDto user;
 
     @JsonProperty
     public UserDto getUser() {

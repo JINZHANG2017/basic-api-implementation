@@ -218,49 +218,51 @@ class RsControllerTest {
 //    }
 
     @Test
-    void should_add_one_rs_event_when_user_not_exists() throws Exception {
-        mockMvc.perform(get("/user/list"))
-                .andExpect((status().isOk()))
-                .andExpect(jsonPath("$", hasSize(3)));
-        mockMvc.perform(get("/rs/list"))
-                .andExpect((status().isOk()))
-                .andExpect(jsonPath("$", hasSize(3)));
-        UserDto user = new UserDto("newuser", "男", 20, "123@test.com", "13345678900");
-        RsEventDto rsEventDto = new RsEventDto("猪肉涨价了", "经济");
-//        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", user);
+    void should_return_400_when_add_one_rs_event_when_user_not_exists() throws Exception {
+        UserEntity userEntity = UserEntity.builder()
+
+                .name("newuser")
+                .age(20)
+                .email("1@t.com")
+                .gender("男")
+                .phone("13345678900").build();
+//        userRepository.save(userEntity);
+        UserDto userDto = userEntity.toUserDto();
+        RsEventDto rsEventDto = RsEventDto.builder()
+                .eventName("event 0")
+                .keyWord("key0")
+                .user(userDto)
+                .userId(userEntity.getId())
+                .build();
         String json = JsonHelper.getString(rsEventDto);
         mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
-        mockMvc.perform(get("/user/list"))
-                .andExpect((status().isOk()))
-                .andExpect(jsonPath("$", hasSize(4)));
-        mockMvc.perform(get("/rs/list"))
-                .andExpect((status().isOk()))
-                .andExpect(jsonPath("$", hasSize(4)));
-        ;
+                .andExpect(status().isBadRequest());
+//        List<RsEventEntity> rsEventEntityList = rsEventRespository.findAll();
+//        assertEquals(1, rsEventEntityList.size());
+//        assertEquals("event 0", rsEventEntityList.get(0).getEventName());
+//        assertEquals("key0", rsEventEntityList.get(0).getKeyWord());
     }
 
     @Test
     void should_return_400_when_user_not_validate() throws Exception {
-        mockMvc.perform(get("/user/list"))
-                .andExpect((status().isOk()))
-                .andExpect(jsonPath("$", hasSize(3)));
-        mockMvc.perform(get("/rs/list"))
-                .andExpect((status().isOk()))
-                .andExpect(jsonPath("$", hasSize(3)));
-        UserDto user = new UserDto("newuser", "男", 0, "123@test.com", "13345678900");
-//        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", user);
-        RsEventDto rsEventDto = new RsEventDto("猪肉涨价了", "经济");
+        UserEntity userEntity = UserEntity.builder()
+
+                .name("newuser")
+                .age(1)
+                .email("1@t.com")
+                .gender("男")
+                .phone("13345678900").build();
+        userRepository.save(userEntity);
+        UserDto userDto = userEntity.toUserDto();
+        RsEventDto rsEventDto = RsEventDto.builder()
+                .eventName("event 0")
+                .keyWord("key0")
+                .user(userDto)
+                .userId(userEntity.getId())
+                .build();
         String json = JsonHelper.getString(rsEventDto);
         mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
-        mockMvc.perform(get("/user/list"))
-                .andExpect((status().isOk()))
-                .andExpect(jsonPath("$", hasSize(3)));
-        mockMvc.perform(get("/rs/list"))
-                .andExpect((status().isOk()))
-                .andExpect(jsonPath("$", hasSize(3)));
-        ;
     }
 
     @Test
