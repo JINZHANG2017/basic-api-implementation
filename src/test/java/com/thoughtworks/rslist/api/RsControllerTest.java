@@ -1,7 +1,7 @@
 package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.thoughtworks.rslist.dto.RsEvent;
+import com.thoughtworks.rslist.dto.RsEventDto;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.entity.UserEntity;
@@ -90,10 +90,10 @@ class RsControllerTest {
                 .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
                 .andExpect(jsonPath("$[2].keyWord", is("无分类")));
         UserDto user = new UserDto("trump", "男", 20, "123@test.com", "13345678900");
-        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济");
+        RsEventDto rsEventDto = new RsEventDto("猪肉涨价了", "经济");
 //        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", user);
         ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(rsEvent);
+        String json = objectMapper.writeValueAsString(rsEventDto);
         mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
         mockMvc.perform(get("/rs/list"))
@@ -121,9 +121,9 @@ class RsControllerTest {
                 .andExpect(jsonPath("$[1].keyWord", is("无分类")))
                 .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
                 .andExpect(jsonPath("$[2].keyWord", is("无分类")));
-        RsEvent rsEvent = new RsEvent(null, "政治");
+        RsEventDto rsEventDto = new RsEventDto(null, "政治");
         ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(rsEvent);
+        String json = objectMapper.writeValueAsString(rsEventDto);
         mockMvc.perform((put("/rs/event?id=1")).content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect((status().isOk()));
         mockMvc.perform(get("/rs/list"))
@@ -150,8 +150,8 @@ class RsControllerTest {
                 .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
                 .andExpect(jsonPath("$[2].keyWord", is("无分类")));
         ObjectMapper objectMapper = new ObjectMapper();
-        RsEvent rsEvent2 = new RsEvent("第二条事件2", null);
-        String json2 = objectMapper.writeValueAsString(rsEvent2);
+        RsEventDto rsEventDto2 = new RsEventDto("第二条事件2", null);
+        String json2 = objectMapper.writeValueAsString(rsEventDto2);
         mockMvc.perform((put("/rs/event?id=2")).content(json2).contentType(MediaType.APPLICATION_JSON))
                 .andExpect((status().isOk()));
         mockMvc.perform(get("/rs/list"))
@@ -178,8 +178,8 @@ class RsControllerTest {
                 .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
                 .andExpect(jsonPath("$[2].keyWord", is("无分类")));
         ObjectMapper objectMapper = new ObjectMapper();
-        RsEvent rsEvent3 = new RsEvent("第三条事件3", "情感");
-        String json3 = objectMapper.writeValueAsString(rsEvent3);
+        RsEventDto rsEventDto3 = new RsEventDto("第三条事件3", "情感");
+        String json3 = objectMapper.writeValueAsString(rsEventDto3);
         mockMvc.perform((put("/rs/event?id=3")).content(json3).contentType(MediaType.APPLICATION_JSON))
                 .andExpect((status().isOk()));
         mockMvc.perform(get("/rs/list"))
@@ -225,9 +225,9 @@ class RsControllerTest {
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$", hasSize(3)));
         UserDto user = new UserDto("trump", "男", 20, "123@test.com", "13345678900");
-        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济");
+        RsEventDto rsEventDto = new RsEventDto("猪肉涨价了", "经济");
 //        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济");
-        String json = JsonHelper.getString(rsEvent);
+        String json = JsonHelper.getString(rsEventDto);
         mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
         mockMvc.perform(get("/user/list"))
@@ -248,9 +248,9 @@ class RsControllerTest {
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$", hasSize(3)));
         UserDto user = new UserDto("newuser", "男", 20, "123@test.com", "13345678900");
-        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济");
+        RsEventDto rsEventDto = new RsEventDto("猪肉涨价了", "经济");
 //        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", user);
-        String json = JsonHelper.getString(rsEvent);
+        String json = JsonHelper.getString(rsEventDto);
         mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
         mockMvc.perform(get("/user/list"))
@@ -272,8 +272,8 @@ class RsControllerTest {
                 .andExpect(jsonPath("$", hasSize(3)));
         UserDto user = new UserDto("newuser", "男", 0, "123@test.com", "13345678900");
 //        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", user);
-        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济");
-        String json = JsonHelper.getString(rsEvent);
+        RsEventDto rsEventDto = new RsEventDto("猪肉涨价了", "经济");
+        String json = JsonHelper.getString(rsEventDto);
         mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
         mockMvc.perform(get("/user/list"))
@@ -288,9 +288,9 @@ class RsControllerTest {
     @Test
     void should_add_a_header_when_add_one_rs_event() throws Exception {
         UserDto user = new UserDto("newuser", "男", 20, "123@test.com", "13345678900");
-        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济");
+        RsEventDto rsEventDto = new RsEventDto("猪肉涨价了", "经济");
 //        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", user);
-        String json = JsonHelper.getString(rsEvent);
+        String json = JsonHelper.getString(rsEventDto);
         MvcResult mvcResult = mockMvc.perform(post("/rs/event")
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -496,4 +496,5 @@ class RsControllerTest {
                 .andExpect(jsonPath("$.eventName", is("event 0")))
                 .andExpect(jsonPath("$.keyWord", is("新的keyWord2")));
     }
+
 }

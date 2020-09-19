@@ -16,11 +16,11 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RsEvent {
+public class RsEventDto {
 
 
 
-    public RsEvent(String eventName, String keyWord) {
+    public RsEventDto(String eventName, String keyWord) {
         this.eventName = eventName;
         this.keyWord = keyWord;
     }
