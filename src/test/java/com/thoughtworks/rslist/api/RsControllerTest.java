@@ -36,23 +36,36 @@ class RsControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-    @Test
-    void should_get_rslist() throws Exception {
+    void add3RsToDB(){
+        UserEntity userEntity = UserEntity.builder()
+                .name("newuser")
+                .age(20)
+                .email("1@t.com")
+                .gender("男")
+                .phone("13345678900").build();
+        userRepository.save(userEntity);
         RsEventEntity rsEventEntity1=RsEventEntity.builder()
                 .eventName("event 0")
                 .keyWord("key0")
+                .user(userEntity)
                 .build();
         rsEventRespository.save(rsEventEntity1);
         RsEventEntity rsEventEntity2=RsEventEntity.builder()
                 .eventName("event 1")
                 .keyWord("key1")
+                .user(userEntity)
                 .build();
         rsEventRespository.save(rsEventEntity2);
         RsEventEntity rsEventEntity3=RsEventEntity.builder()
                 .eventName("event 2")
                 .keyWord("key2")
+                .user(userEntity)
                 .build();
         rsEventRespository.save(rsEventEntity3);
+    }
+    @Test
+    void should_get_rslist() throws Exception {
+        add3RsToDB();
         mockMvc.perform(get("/rs/list"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
@@ -66,18 +79,19 @@ class RsControllerTest {
 
     @Test
     void should_get_one_rs() throws Exception {
-        mockMvc.perform(get("/rs/1"))
-                .andExpect((status().isOk()))
-                .andExpect(jsonPath("$.eventName", is("第一条事件")))
-                .andExpect(jsonPath("$.keyWord", is("无分类")));
+        add3RsToDB();
         mockMvc.perform(get("/rs/2"))
                 .andExpect((status().isOk()))
-                .andExpect(jsonPath("$.eventName", is("第二条事件")))
-                .andExpect(jsonPath("$.keyWord", is("无分类")));
+                .andExpect(jsonPath("$.eventName", is("event 0")))
+                .andExpect(jsonPath("$.keyWord", is("key0")));
         mockMvc.perform(get("/rs/3"))
                 .andExpect((status().isOk()))
-                .andExpect(jsonPath("$.eventName", is("第三条事件")))
-                .andExpect(jsonPath("$.keyWord", is("无分类")));
+                .andExpect(jsonPath("$.eventName", is("event 1")))
+                .andExpect(jsonPath("$.keyWord", is("key1")));
+        mockMvc.perform(get("/rs/4"))
+                .andExpect((status().isOk()))
+                .andExpect(jsonPath("$.eventName", is("event 2")))
+                .andExpect(jsonPath("$.keyWord", is("key2")));
     }
 
     @Test

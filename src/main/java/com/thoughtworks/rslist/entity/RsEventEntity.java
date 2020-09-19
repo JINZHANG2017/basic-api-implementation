@@ -1,5 +1,6 @@
 package com.thoughtworks.rslist.entity;
 
+import com.thoughtworks.rslist.dto.RsEventDto;
 import com.thoughtworks.rslist.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,4 +30,10 @@ public class RsEventEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+    public RsEventDto toRsEventDto(){
+        return RsEventDto.builder().eventName(eventName)
+                .keyWord(keyWord)
+                .userId(user.getId()).build();
+    }
 }
