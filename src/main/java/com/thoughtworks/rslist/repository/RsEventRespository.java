@@ -10,4 +10,5 @@ public interface RsEventRespository extends CrudRepository<RsEventEntity,Integer
     List<RsEventEntity> findAll();
     @Transactional
     void deleteAllByUserId (Integer userId);
+    List<RsEventEntity> findAllByIdBetween(Integer start,Integer end);
 }

@@ -54,11 +54,11 @@ public class RsController {
     }
 
     @GetMapping("/rs/list")
-    public ResponseEntity<List<RsEventDto>> getList(@RequestParam(required = false) Integer start, @RequestParam(required = false) Integer end) {
+    public ResponseEntity<List<RsEventEntity>> getList(@RequestParam(required = false) Integer start, @RequestParam(required = false) Integer end) {
         if (start == null && end == null) {
-            return ResponseEntity.ok(rsList);
+            return ResponseEntity.ok(rsEventRespository.findAll());
         }
-        return ResponseEntity.ok(rsList.subList(start - 1, end));
+        return ResponseEntity.ok(rsEventRespository.findAllByIdBetween(start, end));
     }
 
     @GetMapping("/rs/{id}")
