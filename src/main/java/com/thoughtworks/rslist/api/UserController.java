@@ -21,8 +21,12 @@ import java.util.Optional;
 
 @RestController
 public class UserController {
-    @Autowired
+    final
     UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/user/register")
     public ResponseEntity register(@Valid @RequestBody UserDto user, Errors errors){

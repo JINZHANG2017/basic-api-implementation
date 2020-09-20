@@ -20,12 +20,18 @@ import java.util.Optional;
 
 @Service
 public class RsEventService {
-    @Autowired
+    final
     RsEventRspository rsEventRepository;
-    @Autowired
+    final
     UserRepository userRepository;
-    @Autowired
+    final
     VoteRespository voteRepository;
+
+    public RsEventService(RsEventRspository rsEventRepository, UserRepository userRepository, VoteRespository voteRepository) {
+        this.rsEventRepository = rsEventRepository;
+        this.userRepository = userRepository;
+        this.voteRepository = voteRepository;
+    }
 
     public List<RsEventDto> getList(){
         List<RsEventEntity> allRsEventEntities = rsEventRepository.findAll();

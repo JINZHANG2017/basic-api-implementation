@@ -8,6 +8,8 @@ import com.thoughtworks.rslist.entity.VoteEntity;
 import com.thoughtworks.rslist.repository.RsEventRspository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.repository.VoteRespository;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,12 +19,13 @@ public class VoteService {
     private final UserRepository userRepository;
     private final RsEventRspository rsEventRspository;
     private final VoteRespository voteRespository;
-
     public VoteService(UserRepository userRepository, RsEventRspository rsEventRspository, VoteRespository voteRespository) {
         this.userRepository = userRepository;
         this.rsEventRspository = rsEventRspository;
         this.voteRespository = voteRespository;
     }
+
+
 
     public void vote(Integer rsEventId, VoteDto voteDto) {
         Integer userId = voteDto.getUserId();

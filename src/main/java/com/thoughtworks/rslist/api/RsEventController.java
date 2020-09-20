@@ -25,8 +25,12 @@ import java.util.*;
 @RestController
 public class RsEventController {
 
-    @Autowired
+    final
     RsEventService rsEventService;
+
+    public RsEventController(RsEventService rsEventService) {
+        this.rsEventService = rsEventService;
+    }
 
     @GetMapping("/rs/list")
     public ResponseEntity<List<RsEventDto>> getList(@RequestParam(required = false) Integer start, @RequestParam(required = false) Integer end) {

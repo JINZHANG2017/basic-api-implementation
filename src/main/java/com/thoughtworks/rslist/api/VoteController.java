@@ -16,8 +16,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class VoteController {
 
-    @Autowired
+    final
     VoteService voteService;
+
+    public VoteController(VoteService voteService) {
+        this.voteService = voteService;
+    }
+
     @PostMapping("/rs/vote/{rsEventId}")
     public ResponseEntity vote(@PathVariable Integer rsEventId, @RequestBody VoteDto voteDto) {
         voteService.vote(rsEventId,voteDto);
