@@ -4,22 +4,21 @@ import com.thoughtworks.rslist.dto.VoteDto;
 import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.entity.VoteEntity;
-import com.thoughtworks.rslist.repository.RsEventRespository;
+import com.thoughtworks.rslist.repository.RsEventRspository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.repository.VoteRespository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class VoteController {
     private final UserRepository userRepository;
-    private final RsEventRespository rsEventRespository;
+    private final RsEventRspository rsEventRspository;
     private final VoteRespository voteRespository;
 
-    public VoteController(UserRepository userRepository, RsEventRespository rsEventRespository, VoteRespository voteRespository) {
+    public VoteController(UserRepository userRepository, RsEventRspository rsEventRspository, VoteRespository voteRespository) {
         this.userRepository = userRepository;
-        this.rsEventRespository = rsEventRespository;
+        this.rsEventRspository = rsEventRspository;
         this.voteRespository = voteRespository;
     }
 
@@ -28,7 +27,7 @@ public class VoteController {
         Integer userId = voteDto.getUserId();
         UserEntity userEntity=userRepository.findById(userId).get();
         int userVoteNum = userEntity.getVoteNum();
-        RsEventEntity rsEventEntity = rsEventRespository.findById(rsEventId).get();
+        RsEventEntity rsEventEntity = rsEventRspository.findById(rsEventId).get();
         int voteNum=voteDto.getVoteNum();
         if(userVoteNum>=voteNum){
             VoteEntity voteEntity = VoteEntity.builder().num(voteNum)

@@ -3,10 +3,8 @@ package com.thoughtworks.rslist.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.entity.UserEntity;
-import com.thoughtworks.rslist.repository.RsEventRespository;
+import com.thoughtworks.rslist.repository.RsEventRspository;
 import com.thoughtworks.rslist.repository.UserRepository;
-import com.thoughtworks.rslist.util.JsonHelper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,13 +33,13 @@ public class UserController {
     final
     UserRepository userRepository;
 
-    public UserController(UserRepository userRepository, RsEventRespository rsEventRespository) {
+    public UserController(UserRepository userRepository, RsEventRspository rsEventRspository) {
         this.userRepository = userRepository;
-        this.rsEventRespository = rsEventRespository;
+        this.rsEventRspository = rsEventRspository;
     }
 
     final
-    RsEventRespository rsEventRespository;
+    RsEventRspository rsEventRspository;
 
 
     @PostMapping("/user/register")
@@ -76,4 +74,11 @@ public class UserController {
         //rsEventRespository.deleteAllByUserId(id);
     }
 
+    @GetMapping("/user/list")
+    public ResponseEntity<List<UserDto>> getList() throws JsonProcessingException {
+        List<UserEntity> allUserEntities = userRepository.findAll();
+        List<UserDto> allUserDtos=new ArrayList<>();
+        allUserEntities.forEach(item->allUserDtos.add(item.toUserDto()));
+        return ResponseEntity.ok(allUserDtos);
+    }
 }

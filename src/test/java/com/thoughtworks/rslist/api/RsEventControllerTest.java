@@ -1,11 +1,10 @@
 package com.thoughtworks.rslist.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.dto.RsEventDto;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.entity.UserEntity;
-import com.thoughtworks.rslist.repository.RsEventRespository;
+import com.thoughtworks.rslist.repository.RsEventRspository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.util.JsonHelper;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,19 +48,19 @@ class RsEventControllerTest {
                 .keyWord("key0")
                 .user(userEntity)
                 .build();
-        rsEventRespository.save(rsEventEntity1);
+        rsEventRspository.save(rsEventEntity1);
         RsEventEntity rsEventEntity2 = RsEventEntity.builder()
                 .eventName("event 1")
                 .keyWord("key1")
                 .user(userEntity)
                 .build();
-        rsEventRespository.save(rsEventEntity2);
+        rsEventRspository.save(rsEventEntity2);
         RsEventEntity rsEventEntity3 = RsEventEntity.builder()
                 .eventName("event 2")
                 .keyWord("key2")
                 .user(userEntity)
                 .build();
-        rsEventRespository.save(rsEventEntity3);
+        rsEventRspository.save(rsEventEntity3);
     }
 
     @Test
@@ -131,7 +130,7 @@ class RsEventControllerTest {
         String json = JsonHelper.getString(rsEventDto);
         mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
-        List<RsEventEntity> rsEventEntityList = rsEventRespository.findAll();
+        List<RsEventEntity> rsEventEntityList = rsEventRspository.findAll();
         assertEquals(1, rsEventEntityList.size());
         assertEquals("event 0", rsEventEntityList.get(0).getEventName());
         assertEquals("key0", rsEventEntityList.get(0).getKeyWord());
@@ -145,17 +144,8 @@ class RsEventControllerTest {
         String json = JsonHelper.getString(rsEventDto);
         mockMvc.perform((put("/rs/event?id=2")).content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect((status().isOk()));
-        RsEventEntity rsEventEntity = rsEventRespository.findById(2).get();
+        RsEventEntity rsEventEntity = rsEventRspository.findById(2).get();
         assertEquals("政治", rsEventEntity.getKeyWord());
-//        mockMvc.perform(get("/rs/list"))
-//                .andExpect((status().isOk()))
-//                .andExpect(jsonPath("$", hasSize(3)))
-//                .andExpect(jsonPath("$[0].eventName", is("event 0")))
-//                .andExpect(jsonPath("$[0].keyWord", is("政治")));
-//                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
-//                .andExpect(jsonPath("$[1].keyWord", is("无分类")))
-//                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
-//                .andExpect(jsonPath("$[2].keyWord", is("无分类")));
 
     }
 
@@ -166,7 +156,7 @@ class RsEventControllerTest {
         String json = JsonHelper.getString(rsEventDto);
         mockMvc.perform((put("/rs/event?id=2")).content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect((status().isOk()));
-        RsEventEntity rsEventEntity = rsEventRespository.findById(2).get();
+        RsEventEntity rsEventEntity = rsEventRspository.findById(2).get();
         assertEquals("新事件", rsEventEntity.getEventName());
 
     }
@@ -178,7 +168,7 @@ class RsEventControllerTest {
         String json = JsonHelper.getString(rsEventDto);
         mockMvc.perform((put("/rs/event?id=2")).content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect((status().isOk()));
-        RsEventEntity rsEventEntity = rsEventRespository.findById(2).get();
+        RsEventEntity rsEventEntity = rsEventRspository.findById(2).get();
         assertEquals("新事件", rsEventEntity.getEventName());
         assertEquals("政治", rsEventEntity.getKeyWord());
     }
@@ -188,34 +178,12 @@ class RsEventControllerTest {
         add3RsToDB();
         mockMvc.perform((delete("/rs/event?id=2")))
                 .andExpect((status().isOk()));
-        List<RsEventEntity> rsEventEntityList = rsEventRespository.findAll();
+        List<RsEventEntity> rsEventEntityList = rsEventRspository.findAll();
         assertEquals(2,rsEventEntityList.size());
         assertEquals("event 1",rsEventEntityList.get(0).getEventName());
         assertEquals("event 2",rsEventEntityList.get(1).getEventName());
     }
 
-//    @Test
-//    void should_add_one_rs_event_when_user_exists() throws Exception {
-//        mockMvc.perform(get("/user/list"))
-//                .andExpect((status().isOk()))
-//                .andExpect(jsonPath("$", hasSize(3)));
-//        mockMvc.perform(get("/rs/list"))
-//                .andExpect((status().isOk()))
-//                .andExpect(jsonPath("$", hasSize(3)));
-//        UserDto user = new UserDto("trump", "男", 20, "123@test.com", "13345678900");
-//        RsEventDto rsEventDto = new RsEventDto("猪肉涨价了", "经济");
-////        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济");
-//        String json = JsonHelper.getString(rsEventDto);
-//        mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isCreated());
-//        mockMvc.perform(get("/user/list"))
-//                .andExpect((status().isOk()))
-//                .andExpect(jsonPath("$", hasSize(3)));
-//        mockMvc.perform(get("/rs/list"))
-//                .andExpect((status().isOk()))
-//                .andExpect(jsonPath("$", hasSize(4)));
-//        ;
-//    }
 
     @Test
     void should_return_400_when_add_one_rs_event_when_user_not_exists() throws Exception {
@@ -237,10 +205,7 @@ class RsEventControllerTest {
         String json = JsonHelper.getString(rsEventDto);
         mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
-//        List<RsEventEntity> rsEventEntityList = rsEventRespository.findAll();
-//        assertEquals(1, rsEventEntityList.size());
-//        assertEquals("event 0", rsEventEntityList.get(0).getEventName());
-//        assertEquals("key0", rsEventEntityList.get(0).getKeyWord());
+
     }
 
     @Test
@@ -267,16 +232,7 @@ class RsEventControllerTest {
 
     @Test
     void should_add_a_header_when_add_one_rs_event() throws Exception {
-//        UserDto user = new UserDto("newuser", "男", 20, "123@test.com", "13345678900");
-//        RsEventDto rsEventDto = new RsEventDto("猪肉涨价了", "经济");
-////        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", user);
-//        String json = JsonHelper.getString(rsEventDto);
-//        MvcResult mvcResult = mockMvc.perform(post("/rs/event")
-//                .content(json)
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isCreated()).andReturn();
-//        String index = mvcResult.getResponse().getHeader("index");
-//        assertEquals("3", index);
+
         UserEntity userEntity = UserEntity.builder()
 
                 .name("newuser")
@@ -304,12 +260,12 @@ class RsEventControllerTest {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    RsEventRespository rsEventRespository;
+    RsEventRspository rsEventRspository;
 
     @BeforeEach
     void setUp() {
         userRepository.deleteAll();
-        rsEventRespository.deleteAll();
+        rsEventRspository.deleteAll();
     }
 
 //    @Test
@@ -338,7 +294,7 @@ class RsEventControllerTest {
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
-        List<RsEventEntity> rsEventEntityList = rsEventRespository.findAll();
+        List<RsEventEntity> rsEventEntityList = rsEventRspository.findAll();
         assertEquals(0, rsEventEntityList.size());
     }
 
@@ -359,7 +315,7 @@ class RsEventControllerTest {
                 .keyWord("key")
                 .user(userEntity)
                 .build();
-        rsEventRespository.save(rsEventEntity);
+        rsEventRspository.save(rsEventEntity);
         mockMvc.perform(get("/rs/{id}", rsEventEntity.getId()))
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$.eventName", is("event 0")))
@@ -393,7 +349,7 @@ class RsEventControllerTest {
                 .keyWord("key")
                 .user(userEntity)
                 .build();
-        rsEventRespository.save(rsEventEntity);
+        rsEventRspository.save(rsEventEntity);
         String json = "{\"eventName\":\"新的热搜事件名\",\"keyWord\":\"新的关键字\",\"userId\": " + userEntity.getId() + "}";
         mockMvc.perform(patch("/rs/{id}", rsEventEntity.getId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -419,7 +375,7 @@ class RsEventControllerTest {
                 .keyWord("key")
                 .user(userEntity)
                 .build();
-        rsEventRespository.save(rsEventEntity);
+        rsEventRspository.save(rsEventEntity);
         String json = "{\"eventName\":\"新的热搜事件名\",\"keyWord\":\"新的关键字\",\"userId\": " + userEntity.getId() + 1 + "}";
         mockMvc.perform(patch("/rs/{id}", rsEventEntity.getId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -441,7 +397,7 @@ class RsEventControllerTest {
                 .keyWord("key")
                 .user(userEntity)
                 .build();
-        rsEventRespository.save(rsEventEntity);
+        rsEventRspository.save(rsEventEntity);
         String json = "{\"eventName\":\"新的热搜事件名\",\"keyWord\":\"\",\"userId\": " + userEntity.getId() + "}";
         mockMvc.perform(patch("/rs/{id}", rsEventEntity.getId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -476,7 +432,7 @@ class RsEventControllerTest {
                 .keyWord("key")
                 .user(userEntity)
                 .build();
-        rsEventRespository.save(rsEventEntity);
+        rsEventRspository.save(rsEventEntity);
         String json = "{\"eventName\":\"\",\"keyWord\":\"新的keyWord\",\"userId\": " + userEntity.getId() + "}";
         mockMvc.perform(patch("/rs/{id}", rsEventEntity.getId())
                 .contentType(MediaType.APPLICATION_JSON)

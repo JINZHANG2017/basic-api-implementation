@@ -3,7 +3,7 @@ package com.thoughtworks.rslist.api;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.entity.UserEntity;
-import com.thoughtworks.rslist.repository.RsEventRespository;
+import com.thoughtworks.rslist.repository.RsEventRspository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.util.JsonHelper;
 import org.junit.jupiter.api.BeforeEach;
@@ -107,12 +107,12 @@ class UserControllerTest {
     UserRepository userRepository;
 
     @Autowired
-    RsEventRespository rsEventRespository;
+    RsEventRspository rsEventRspository;
 
     @BeforeEach
     void clean_tables(){
         userRepository.deleteAll();
-        rsEventRespository.deleteAll();
+        rsEventRspository.deleteAll();
     }
 
 
@@ -188,7 +188,7 @@ class UserControllerTest {
                 .keyWord("key")
                 .user(userEntity)
                 .build();
-        rsEventRespository.save(rsEventEntity);
+        rsEventRspository.save(rsEventEntity);
 //        mockMvc.perform(get("/user/{id}",userEntity.getId()))
 //                .andExpect((status().isOk()))
 //                .andExpect(jsonPath("$.id", is(1)))
@@ -198,7 +198,7 @@ class UserControllerTest {
 //        mockMvc.perform(get("/user/{id}",userEntity.getId()))
 //                .andExpect((status().isBadRequest()));
         List<UserEntity> userEntityList=userRepository.findAll();
-        List<RsEventEntity> rsEventEntityList = rsEventRespository.findAll();
+        List<RsEventEntity> rsEventEntityList = rsEventRspository.findAll();
 
         assertEquals(0,userEntityList.size());
         assertEquals(0,rsEventEntityList.size());

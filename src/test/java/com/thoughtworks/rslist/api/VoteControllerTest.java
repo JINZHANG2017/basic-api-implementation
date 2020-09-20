@@ -1,10 +1,9 @@
 package com.thoughtworks.rslist.api;
 
-import com.thoughtworks.rslist.dto.VoteDto;
 import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.entity.VoteEntity;
-import com.thoughtworks.rslist.repository.RsEventRespository;
+import com.thoughtworks.rslist.repository.RsEventRspository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.repository.VoteRespository;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,7 +31,7 @@ class VoteControllerTest {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    RsEventRespository rsEventRespository;
+    RsEventRspository rsEventRspository;
     @Autowired
     VoteRespository voteRespository;
     @Autowired
@@ -70,7 +68,7 @@ class VoteControllerTest {
                 .keyWord("key")
                 .user(userEntity)
                 .build();
-        rsEventRespository.save(rsEventEntity);
+        rsEventRspository.save(rsEventEntity);
         int voteNum=3;
         String json="{\"voteNum\": \""+voteNum+"\",\"userId\": \""+userEntity.getId()+"\",\"voteTime\": \""+localDateTime.toString()+"\"}";
 //        VoteDto.builder()
@@ -108,7 +106,7 @@ class VoteControllerTest {
                 .keyWord("key")
                 .user(userEntity)
                 .build();
-        rsEventRespository.save(rsEventEntity);
+        rsEventRspository.save(rsEventEntity);
         int voteNum=3;
         String json="{\"voteNum\": \""+voteNum+"\",\"userId\": \""+userEntity.getId()+"\",\"voteTime\": \""+localDateTime.toString()+"\"}";
 //        VoteDto.builder()

@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import javax.transaction.Transactional;
 import java.util.List;
 
-public interface RsEventRespository extends CrudRepository<RsEventEntity,Integer> {
+public interface RsEventRspository extends CrudRepository<RsEventEntity,Integer> {
     List<RsEventEntity> findAll();
     @Transactional
     void deleteAllByUserId (Integer userId);
