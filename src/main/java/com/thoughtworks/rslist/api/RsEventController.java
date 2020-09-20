@@ -19,7 +19,7 @@ import javax.validation.Valid;
 import java.util.*;
 
 @RestController
-public class RsController {
+public class RsEventController {
 
     private List<UserDto> usersList = initUsersList();
     private List<RsEventDto> rsList = initRsList();
@@ -28,7 +28,7 @@ public class RsController {
 
     private final RsEventRespository rsEventRespository;
 
-    public RsController(RsEventRespository rsEventRespository, UserRepository userRepository) {
+    public RsEventController(RsEventRespository rsEventRespository, UserRepository userRepository) {
         this.rsEventRespository = rsEventRespository;
         this.userRepository = userRepository;
     }
