@@ -16,6 +16,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
@@ -151,8 +152,8 @@ class UserControllerTest {
         userRepository.save(userEntity);
         mockMvc.perform(get("/user/{id}",userEntity.getId()))
                 .andExpect((status().isOk()))
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.name", is("newuser")));
+                .andExpect(jsonPath("$.name", is("newuser")))
+                .andExpect(jsonPath("$.age", is(20)));
     }
 
     @Test
@@ -164,14 +165,13 @@ class UserControllerTest {
                 .gender("男")
                 .phone("13345678900").build();
         userRepository.save(userEntity);
-        mockMvc.perform(get("/user/{id}",userEntity.getId()))
-                .andExpect((status().isOk()))
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.name", is("newuser")));
+        UserEntity userGot = userRepository.findById(userEntity.getId()).get();
+        assertEquals("newuser",userGot.getName());
+        assertEquals(20,userGot.getAge());
         mockMvc.perform(delete("/user/{id}",userEntity.getId()))
                 .andExpect((status().isNoContent()));
-        mockMvc.perform(get("/user/{id}",userEntity.getId()))
-                .andExpect((status().isBadRequest()));
+        Optional<UserEntity> userOpt = userRepository.findById(userEntity.getId());
+        assertEquals(false,userOpt.isPresent());
     }
 
     @Test

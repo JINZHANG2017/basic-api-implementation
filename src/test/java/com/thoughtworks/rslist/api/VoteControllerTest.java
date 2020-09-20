@@ -71,18 +71,10 @@ class VoteControllerTest {
         rsEventRspository.save(rsEventEntity);
         int voteNum=3;
         String json="{\"voteNum\": \""+voteNum+"\",\"userId\": \""+userEntity.getId()+"\",\"voteTime\": \""+localDateTime.toString()+"\"}";
-//        VoteDto.builder()
-//                .voteNum(voteNum)
-//                .localDateTime(localDateTime)
-//                .userId()
         mockMvc.perform(post("/rs/vote/{rsEventId}",rsEventEntity.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect((status().isOk()));
-//        mockMvc.perform(get("/user/{id}",userEntity.getId()))
-//                .andExpect((status().isOk()))
-//                .andExpect(jsonPath("$.voteNum", is(7)))
-//                .andExpect(jsonPath("$.name", is("newuser")));
         UserEntity userEnt = userRepository.findById(userEntity.getId()).get();
         List<VoteEntity> votes = voteRespository.findAll();
         assertEquals(7,userEnt.getVoteNum());
@@ -109,18 +101,10 @@ class VoteControllerTest {
         rsEventRspository.save(rsEventEntity);
         int voteNum=3;
         String json="{\"voteNum\": \""+voteNum+"\",\"userId\": \""+userEntity.getId()+"\",\"voteTime\": \""+localDateTime.toString()+"\"}";
-//        VoteDto.builder()
-//                .voteNum(voteNum)
-//                .localDateTime(localDateTime)
-//                .userId()
         mockMvc.perform(post("/rs/vote/{rsEventId}",rsEventEntity.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect((status().isBadRequest()));
-//        mockMvc.perform(get("/user/{id}",userEntity.getId()))
-//                .andExpect((status().isOk()))
-//                .andExpect(jsonPath("$.voteNum", is(7)))
-//                .andExpect(jsonPath("$.name", is("newuser")));
         UserEntity userEnt = userRepository.findById(userEntity.getId()).get();
         assertEquals(2,userEnt.getVoteNum());
         assertEquals("newuser",userEntity.getName());
