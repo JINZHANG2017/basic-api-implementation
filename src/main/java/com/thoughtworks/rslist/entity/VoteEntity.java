@@ -3,6 +3,7 @@ package com.thoughtworks.rslist.entity;
 
 import com.thoughtworks.rslist.dto.RsEventDto;
 import com.thoughtworks.rslist.dto.UserDto;
+import com.thoughtworks.rslist.dto.VoteDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,4 +31,12 @@ public class VoteEntity {
     @JoinColumn(name="rs_event_id")
     private RsEventEntity rsEventEntity;
 
+    public VoteDto toVoteDto() {
+        return VoteDto.builder()
+                .userId(user.getId())
+                .voteNum(num)
+                .rsEventId(rsEventEntity.getId())
+                .voteTime(localDateTime)
+                .build();
+    }
 }

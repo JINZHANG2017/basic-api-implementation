@@ -14,6 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class VoteService {
     private final UserRepository userRepository;
@@ -44,5 +48,12 @@ public class VoteService {
         } else {
             throw new MyExcption(400, "user votes not enough");
         }
+    }
+
+    public List<VoteDto> getVoteList(LocalDateTime startTime, LocalDateTime endTime) {
+        List<VoteEntity> voteEntityList = voteRespository.findAllByLocalDateTimeBetween(startTime,endTime);
+        List<VoteDto> voteDtoList=new ArrayList<>();
+        voteEntityList.forEach(voteEntity -> voteDtoList.add(voteEntity.toVoteDto()));
+        return voteDtoList;
     }
 }

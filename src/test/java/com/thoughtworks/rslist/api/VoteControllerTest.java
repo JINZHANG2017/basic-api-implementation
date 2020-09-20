@@ -14,7 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
@@ -36,19 +38,7 @@ class VoteControllerTest {
     VoteRespository voteRespository;
     @Autowired
     MockMvc mockMvc;
-    //    添加投票接口
-//    ```
-//    request: post /rs/vote/{rsEventId}
-//    request body: {
-//        voteNum: 5,
-//                userId: 1,
-//                voteTime: "current time"
-//    }
-//    接口要求：如果用户剩的票数大于等于voteNum，则能成功给rsEventId对应的热搜事件投票
-//    如果用户剩的票数小于voteNum,则投票失败，返回400
-//    考虑到以后需要查询投票记录的需求（根据userId查询他投过票的所有热搜事件，票数和投票时间，根据rsEventId查询所有给他投过票的用户，票数和投票时间），
-//    创建一个Vote表是一个明智的选择
-//            目前不用考虑给热搜事件列表排序的问题
+
     LocalDateTime localDateTime=LocalDateTime.now();
 
 
@@ -108,5 +98,58 @@ class VoteControllerTest {
         UserEntity userEnt = userRepository.findById(userEntity.getId()).get();
         assertEquals(2,userEnt.getVoteNum());
         assertEquals("newuser",userEntity.getName());
+    }
+
+    @Test
+    void should_get_votelist_between_starttime_and_endtime() throws Exception {
+        UserEntity userEntity = UserEntity.builder()
+                .name("newuser")
+                .age(20)
+                .email("1@t.com")
+                .gender("男")
+                .phone("13345678900")
+                .voteNum(2).build();
+        userRepository.save(userEntity);
+        RsEventEntity rsEventEntity=RsEventEntity.builder()
+                .eventName("event 0")
+                .keyWord("key")
+                .user(userEntity)
+                .build();
+        rsEventRspository.save(rsEventEntity);
+        LocalDate localDate= LocalDate.now();
+
+        VoteEntity voteEntity1=VoteEntity.builder()
+                .rsEventEntity(rsEventEntity)
+                .localDateTime(LocalDateTime.of(2020,9,20,17,6,30))
+                .num(1)
+                .user(userEntity)
+                .build();
+        VoteEntity voteEntity2=VoteEntity.builder()
+                .rsEventEntity(rsEventEntity)
+                .localDateTime(LocalDateTime.of(2020,9,20,17,6,40))
+                .num(2)
+                .user(userEntity)
+                .build();
+        VoteEntity voteEntity3=VoteEntity.builder()
+                .rsEventEntity(rsEventEntity)
+                .localDateTime(LocalDateTime.of(2020,9,20,17,6,50))
+                .num(3)
+                .user(userEntity)
+                .build();
+        voteRespository.save(voteEntity1);
+        voteRespository.save(voteEntity2);
+        voteRespository.save(voteEntity3);
+        LocalDateTime startTime=LocalDateTime.of(2020,9,20,17,6,25);
+        LocalDateTime endTime=LocalDateTime.of(2020,9,20,17,6,45);
+//        new LocalDateTime(12);
+        mockMvc.perform(get("/rs/vote/list")
+                .param("startTime",startTime.toString())
+                .param("endTime",endTime.toString()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].voteNum", is(1)))
+                .andExpect(jsonPath("$[0].voteTime", is("2020-09-20T17:06:30")))
+                .andExpect(jsonPath("$[1].voteNum", is(2)))
+                .andExpect(jsonPath("$[1].voteTime", is("2020-09-20T17:06:40")));
+
     }
 }
